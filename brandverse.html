@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Great Empire - Brand Universe</title>
-    <meta name="description" content="Explore The Great Empire galaxy of interconnected brands">
+    <meta name="description" content="Of His increase there shall be no end - Explore The Great Empire galaxy of interconnected brands">
     <meta name="theme-color" content="#0a1128">
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -16,55 +15,153 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        body {
-            background: #0a1128;
-            color: #ffffff;
-            min-height: 100vh;
-            overflow: hidden;
+        :root {
+            --navy: #0a1128;
+            --navy-light: #1a2448;
+            --blue: #4361ee;
+            --blue-light: #4cc9f0;
+            --white: #ffffff;
+            --gray: #e2e8f0;
         }
 
-        .universe-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
+        body {
+            background: var(--navy);
+            color: var(--white);
+            min-height: 100vh;
             overflow: hidden;
-            background: radial-gradient(ellipse at center, #0a1128 0%, #050811 100%);
+            touch-action: none;
         }
 
         /* Star field */
         .stars {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
 
         .star {
             position: absolute;
-            background-color: #ffffff;
+            background-color: var(--white);
             border-radius: 50%;
             animation: twinkle 3s infinite alternate;
         }
 
-        /* Controls */
-        .controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        /* Main container */
+        .universe-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar - Mobile optimized */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 17, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
             z-index: 1000;
             display: flex;
-            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(67, 97, 238, 0.3);
+            min-height: 60px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--blue), var(--blue-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+
+        .slogan {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        /* Search container */
+        .search-container {
+            flex: 1;
+            max-width: 300px;
+            margin: 0 16px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: var(--white);
+            font-size: 0.95rem;
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px;
+            display: none;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 8px;
         }
 
         .control-btn {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
             color: white;
             cursor: pointer;
             display: flex;
@@ -75,168 +172,318 @@
 
         .control-btn:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
-        /* Main galaxy */
+        /* Universe content */
+        .universe-content {
+            flex: 1;
+            position: relative;
+            margin-top: 60px;
+            overflow: hidden;
+            width: 100%;
+            height: calc(100vh - 60px);
+        }
+
+        /* Galaxy center - TGE Core */
         .galaxy-center {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
+            z-index: 10;
         }
 
         .tge-core {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, #ffffff 0%, #4cc9f0 30%, #4361ee 70%, transparent 100%);
+            background: linear-gradient(135deg, var(--blue), var(--blue-light));
             border-radius: 50%;
-            box-shadow: 
-                0 0 80px #4361ee,
-                0 0 120px rgba(67, 97, 238, 0.5),
-                inset 0 0 20px rgba(255, 255, 255, 0.8);
-            animation: pulse 4s infinite ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            animation: pulse 4s infinite ease-in-out;
+            box-shadow: 
+                0 0 60px var(--blue),
+                0 0 100px rgba(67, 97, 238, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
-        /* Suns */
-        .sun {
+        .tge-core img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Sun containers - Now with visible labels */
+        .sun-container {
             position: absolute;
-            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .sun-container:hover {
+            z-index: 30;
+        }
+
+        .sun-label {
+            background: rgba(10, 17, 40, 0.9);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 8px;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            min-width: max-content;
+        }
+
+        .sun {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
-            font-size: 0;
-            overflow: hidden;
-            z-index: 10;
-            filter: drop-shadow(0 0 10px currentColor);
+            position: relative;
+            box-shadow: 0 0 20px currentColor;
+            transition: all 0.3s ease;
         }
 
         .sun:hover {
             transform: scale(1.15);
-            font-size: 0.8rem;
-            z-index: 20;
         }
 
+        /* Sun positions and colors */
+        .sun-container.teleioo { top: 15%; left: 10%; }
         .sun.teleioo { 
-            top: 20%; left: 20%; 
-            width: 65px; height: 65px;
             background: radial-gradient(circle, #ff9e00 0%, #ff6b00 100%);
-            box-shadow: 0 0 30px #ff9e00;
+            animation: orbit 20s linear infinite;
             color: #ff9e00;
         }
+
+        .sun-container.adamah { top: 10%; right: 15%; }
         .sun.adamah { 
-            top: 15%; right: 25%; 
-            width: 60px; height: 60px;
             background: radial-gradient(circle, #4ade80 0%, #16a34a 100%);
-            box-shadow: 0 0 25px #4ade80;
+            animation: orbit 25s linear infinite reverse;
             color: #4ade80;
         }
+
+        .sun-container.eon { top: 40%; right: 5%; }
         .sun.eon { 
-            top: 40%; right: 15%; 
-            width: 70px; height: 70px;
             background: radial-gradient(circle, #60a5fa 0%, #1d4ed8 100%);
-            box-shadow: 0 0 35px #60a5fa;
+            animation: orbit 30s linear infinite;
             color: #60a5fa;
         }
+
+        .sun-container.prime { bottom: 30%; right: 15%; }
         .sun.prime { 
-            bottom: 30%; right: 20%; 
-            width: 55px; height: 55px;
             background: radial-gradient(circle, #f97316 0%, #ea580c 100%);
-            box-shadow: 0 0 20px #f97316;
+            animation: orbit 22s linear infinite reverse;
             color: #f97316;
         }
+
+        .sun-container.enative { bottom: 20%; left: 20%; }
         .sun.enative { 
-            bottom: 20%; left: 30%; 
-            width: 62px; height: 62px;
             background: radial-gradient(circle, #c084fc 0%, #9333ea 100%);
-            box-shadow: 0 0 28px #c084fc;
+            animation: orbit 28s linear infinite;
             color: #c084fc;
         }
+
+        .sun-container.aphorizo { top: 35%; left: 5%; }
         .sun.aphorizo { 
-            top: 30%; left: 10%; 
-            width: 58px; height: 58px;
             background: radial-gradient(circle, #f472b6 0%, #db2777 100%);
-            box-shadow: 0 0 22px #f472b6;
+            animation: orbit 24s linear infinite reverse;
             color: #f472b6;
         }
 
-        /* Brand clusters */
-        .brand-cluster {
+        /* Planet orbits - Visible on mobile */
+        .planet-orbit {
             position: absolute;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .brand-cluster.active {
+        .sun-container.active .planet-orbit {
             opacity: 1;
-            transform: scale(1);
-            pointer-events: all;
         }
 
-        .brand-item {
+        .planet {
             position: absolute;
-            width: 42px;
-            height: 42px;
-            background: white;
+            width: 36px;
+            height: 36px;
+            background: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0a1128;
+            color: var(--navy);
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            border: 2px solid transparent;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 2px solid currentColor;
+            z-index: 15;
+            animation: float 6s ease-in-out infinite;
         }
 
-        .brand-item:hover {
+        .planet:hover {
             transform: scale(1.2);
-            border-color: currentColor;
-            z-index: 30;
+            z-index: 25;
         }
 
-        .brand-item.sub-item {
-            width: 32px;
-            height: 32px;
-            background: #f8f9fa;
-            font-size: 0.6rem;
-            font-weight: 500;
+        /* Mobile overlay menu */
+        .mobile-overlay {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 17, 40, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            padding: 20px;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-overlay.active {
+            transform: translateY(0);
+        }
+
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mobile-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-suns {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mobile-sun-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-sun-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .mobile-sun-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .mobile-sun-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .mobile-sun-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .mobile-planets {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mobile-planet-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid;
+        }
+
+        .mobile-planet-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .mobile-sub-brands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .mobile-sub-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
 
         /* Info panel */
         .info-panel {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            color: #0a1128;
-            padding: 1.5rem;
+            background: var(--white);
+            color: var(--navy);
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-top: 1px solid rgba(10, 17, 40, 0.1);
             z-index: 1000;
-            max-height: 40vh;
+            max-height: 70vh;
             overflow-y: auto;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .info-panel.active {
@@ -247,131 +494,105 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #4361ee;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--blue);
         }
 
         .info-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            color: #0a1128;
+            color: var(--navy);
         }
 
-        .close-btn {
+        .close-info {
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: #0a1128;
+            color: var(--navy);
             cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 4px;
+            padding: 5px;
+            border-radius: 5px;
         }
 
-        .close-btn:hover {
+        .close-info:hover {
             background: rgba(10, 17, 40, 0.1);
         }
 
         .info-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 20px;
         }
 
         .info-section h3 {
-            color: #4361ee;
-            margin-bottom: 0.75rem;
+            color: var(--blue);
+            margin-bottom: 10px;
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .info-list {
+        .brand-list {
             list-style: none;
         }
 
-        .info-list li {
-            padding: 0.5rem 0;
+        .brand-list li {
+            padding: 10px 0;
             border-bottom: 1px solid rgba(10, 17, 40, 0.1);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
         }
 
-        .info-list li:last-child {
+        .brand-list li:last-child {
             border-bottom: none;
         }
 
-        .info-list i {
-            color: #4361ee;
-            width: 20px;
+        .brand-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
         }
 
-        /* Navigation header */
-        .nav-header {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #4361ee, #4cc9f0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 1px;
-        }
-
-        .tagline {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.25rem;
-        }
-
-        /* Search bar */
-        .search-container {
-            position: absolute;
-            top: 20px;
+        /* Mobile navigation hint */
+        .mobile-hint {
+            position: fixed;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 400px;
-            max-width: 90%;
-            z-index: 1000;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 0.75rem 1.25rem;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 50px;
-            border: 1px solid rgba(10, 17, 40, 0.1);
-            color: #0a1128;
-            font-size: 1rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-bar::placeholder {
-            color: rgba(10, 17, 40, 0.5);
-        }
-
-        /* Connection lines */
-        .connection {
-            position: absolute;
-            background: rgba(67, 97, 238, 0.2);
-            transform-origin: 0 0;
-            z-index: 1;
+            background: rgba(10, 17, 40, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 500;
+            animation: bounce 2s infinite;
+            display: none;
         }
 
         /* Animations */
         @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
         }
 
         @keyframes float {
@@ -379,101 +600,162 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* PWA Install Prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            color: #0a1128;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            z-index: 2000;
-            transform: translateY(150%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: 350px;
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
         }
 
-        .install-prompt.show {
-            transform: translateY(0);
-        }
-
-        .install-prompt h4 {
-            margin-bottom: 0.5rem;
-            color: #4361ee;
-        }
-
-        .install-prompt p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            color: rgba(10, 17, 40, 0.7);
-        }
-
-        .install-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .install-btn {
-            flex: 1;
-            padding: 0.5rem;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .install-btn.primary {
-            background: #4361ee;
-            color: white;
-        }
-
-        .install-btn.secondary {
-            background: rgba(10, 17, 40, 0.1);
-            color: #0a1128;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .search-container {
-                width: 300px;
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .sun-container {
+                transform: scale(0.9);
+            }
+            
+            .sun-label {
+                font-size: 0.8rem;
+                padding: 4px 10px;
             }
             
             .sun {
-                width: 50px !important;
-                height: 50px !important;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 10px 12px;
+                min-height: 50px;
             }
             
-            .brand-item {
-                width: 36px;
-                height: 36px;
+            .universe-content {
+                margin-top: 50px;
+                height: calc(100vh - 50px);
+            }
+            
+            .mobile-overlay {
+                top: 50px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .search-container {
+                display: none;
+            }
+            
+            .controls {
+                display: none;
+            }
+            
+            .sun-container {
+                transform: scale(0.8);
+            }
+            
+            .sun-label {
+                font-size: 0.75rem;
+                padding: 3px 8px;
+            }
+            
+            .sun {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .planet {
+                width: 30px;
+                height: 30px;
+                font-size: 0.65rem;
+            }
+            
+            .mobile-hint {
+                display: block;
+            }
+            
+            .galaxy-center {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-main {
+                font-size: 1.2rem;
+            }
+            
+            .slogan {
+                font-size: 0.7rem;
+            }
+            
+            .sun-container {
+                transform: scale(0.7);
+            }
+            
+            .sun-label {
+                font-size: 0.7rem;
+            }
+            
+            .sun {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .planet {
+                width: 28px;
+                height: 28px;
                 font-size: 0.6rem;
             }
             
-            .brand-item.sub-item {
-                width: 28px;
-                height: 28px;
+            .mobile-suns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Landscape optimization */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .top-bar {
+                padding: 8px 12px;
+                min-height: 45px;
             }
             
-            .info-content {
-                grid-template-columns: 1fr;
+            .universe-content {
+                margin-top: 45px;
+                height: calc(100vh - 45px);
+            }
+            
+            .mobile-overlay {
+                top: 45px;
+            }
+            
+            .sun-container {
+                transform: scale(0.6);
             }
         }
     </style>
 </head>
 <body>
-    <div class="universe-container" id="universe">
-        <div class="stars" id="stars"></div>
-        
-        <div class="nav-header">
-            <div class="logo">TGE</div>
-            <div class="tagline">The Great Empire</div>
+    <!-- Star background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <img src="https://i.postimg.cc/BZLpJh2v/Untitled-design-10-removebg-preview.webp" alt="TGE" id="tgeLogo">
+            </div>
+            <div class="logo-text">
+                <div class="logo-main">THE GREAT EMPIRE</div>
+                <div class="slogan">Of His increase there shall be no end</div>
+            </div>
         </div>
         
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
         <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search brands in the universe..." id="searchBar">
+            <input type="text" class="search-bar" placeholder="Search brands..." id="searchBar">
         </div>
         
         <div class="controls">
@@ -487,74 +769,135 @@
                 <i class="fas fa-crosshairs"></i>
             </button>
         </div>
-        
+    </div>
+    
+    <!-- Universe Content -->
+    <div class="universe-content" id="universeContent">
         <div class="galaxy-center">
-            <div class="tge-core">TGE</div>
-        </div>
-        
-        <!-- Suns -->
-        <div class="sun teleioo" data-cluster="teleioo">Teleioō Savour</div>
-        <div class="sun adamah" data-cluster="adamah">Adamah</div>
-        <div class="sun eon" data-cluster="eon">EON Global</div>
-        <div class="sun prime" data-cluster="prime">Prime Reserve</div>
-        <div class="sun enative" data-cluster="enative">ENative</div>
-        <div class="sun aphorizo" data-cluster="aphorizo">Aphorizo</div>
-        
-        <!-- Brand clusters -->
-        <div class="brand-cluster" id="teleioo-cluster">
-            <!-- Brands will be positioned by JS -->
-        </div>
-        
-        <!-- Info Panel -->
-        <div class="info-panel" id="infoPanel">
-            <div class="info-header">
-                <h2 class="info-title" id="infoTitle">Brand Information</h2>
-                <button class="close-btn" id="closeInfo">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="info-content" id="infoContent">
-                <!-- Content will be populated by JS -->
+            <div class="tge-core">
+                <img src="https://i.postimg.cc/BZLpJh2v/Untitled-design-10-removebg-preview.webp" alt="TGE Core" onerror="this.style.display='none'">
             </div>
         </div>
         
-        <!-- PWA Install Prompt -->
-        <div class="install-prompt" id="installPrompt">
-            <h4>Install TGE Universe</h4>
-            <p>Add to your home screen for fullscreen experience and offline access</p>
-            <div class="install-buttons">
-                <button class="install-btn primary" id="installBtn">Install</button>
-                <button class="install-btn secondary" id="dismissInstall">Later</button>
+        <!-- Suns with visible labels -->
+        <div class="sun-container teleioo" data-sun="teleioo">
+            <div class="sun-label">Teleioō Savour</div>
+            <div class="sun teleioo">
+                <i class="fas fa-utensils"></i>
             </div>
+            <div class="planet-orbit" style="width: 160px; height: 160px; top: -50px; left: -50px;"></div>
         </div>
+        
+        <div class="sun-container adamah" data-sun="adamah">
+            <div class="sun-label">Adamah</div>
+            <div class="sun adamah">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <div class="planet-orbit" style="width: 140px; height: 140px; top: -40px; left: -40px;"></div>
+        </div>
+        
+        <div class="sun-container eon" data-sun="eon">
+            <div class="sun-label">EON Global</div>
+            <div class="sun eon">
+                <i class="fas fa-globe"></i>
+            </div>
+            <div class="planet-orbit" style="width: 180px; height: 180px; top: -60px; left: -60px;"></div>
+        </div>
+        
+        <div class="sun-container prime" data-sun="prime">
+            <div class="sun-label">Prime Reserve</div>
+            <div class="sun prime">
+                <i class="fas fa-gem"></i>
+            </div>
+            <div class="planet-orbit" style="width: 150px; height: 150px; top: -45px; left: -45px;"></div>
+        </div>
+        
+        <div class="sun-container enative" data-sun="enative">
+            <div class="sun-label">ENative</div>
+            <div class="sun enative">
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="planet-orbit" style="width: 170px; height: 170px; top: -55px; left: -55px;"></div>
+        </div>
+        
+        <div class="sun-container aphorizo" data-sun="aphorizo">
+            <div class="sun-label">Aphorizo</div>
+            <div class="sun aphorizo">
+                <i class="fas fa-paint-brush"></i>
+            </div>
+            <div class="planet-orbit" style="width: 145px; height: 145px; top: -42px; left: -42px;"></div>
+        </div>
+        
+        <!-- Planets will be added here by JavaScript -->
+    </div>
+    
+    <!-- Mobile Overlay Menu -->
+    <div class="mobile-overlay" id="mobileOverlay">
+        <div class="mobile-header">
+            <div class="mobile-title">Explore TGE Universe</div>
+            <button class="close-menu" id="closeMenuBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-suns" id="mobileSunsList">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        <div id="mobilePlanetsView">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Info Panel -->
+    <div class="info-panel" id="infoPanel">
+        <div class="info-header">
+            <h2 class="info-title" id="infoTitle">Brand Information</h2>
+            <button class="close-info" id="closeInfoBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="info-content" id="infoContent">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Mobile Hint -->
+    <div class="mobile-hint" id="mobileHint">
+        <i class="fas fa-hand-pointer"></i> Tap suns to explore brands
     </div>
 
     <script>
-        // Create stars
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 300; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 2 + 1;
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.opacity = Math.random() * 0.6 + 0.2;
-            star.style.animationDelay = `${Math.random() * 3}s`;
-            starsContainer.appendChild(star);
+        // Initialize stars
+        function initStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = window.innerWidth < 768 ? 150 : 300;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = Math.random() * 0.6 + 0.2;
+                star.style.animationDelay = `${Math.random() * 3}s`;
+                star.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                starsContainer.appendChild(star);
+            }
         }
 
         // Universe data
         const universeData = {
             teleioo: {
                 name: "Teleioō Savour",
+                icon: "fa-utensils",
                 color: "#ff9e00",
                 brands: [
                     { 
                         name: "Fusion Foods", 
+                        short: "FF",
                         color: "#ff9e00",
-                        items: [
+                        subBrands: [
                             { name: "Mugs and Dines", desc: "Culinary brand" },
                             { name: "Fusion Stores", desc: "Raw food store" },
                             { name: "Sip-Up", desc: "Beverages and Drinks" }
@@ -562,24 +905,27 @@
                     },
                     { 
                         name: "Teleioō Safaris", 
+                        short: "TS",
                         color: "#4ade80",
-                        items: [
+                        subBrands: [
                             { name: "Slair Safaris", desc: "Travel Agency" },
                             { name: "Book-Up Trips", desc: "Trips and Vacations" }
                         ]
                     },
                     { 
                         name: "Hub Savoir", 
+                        short: "HS",
                         color: "#60a5fa",
-                        items: [
+                        subBrands: [
                             { name: "Hekima Hub", desc: "Courses brand" },
                             { name: "Hekima Tutors", desc: "Private tutoring Platform" }
                         ]
                     },
                     { 
                         name: "Big Media Alliance", 
+                        short: "BMA",
                         color: "#f97316",
-                        items: [
+                        subBrands: [
                             { name: "School of Media and Arts", desc: "Educational institution" },
                             { name: "Global News Channel", desc: "Worldwide news broadcasting" }
                         ]
@@ -588,12 +934,14 @@
             },
             adamah: {
                 name: "Adamah",
+                icon: "fa-leaf",
                 color: "#4ade80",
                 brands: [
                     { 
                         name: "Adamah Core", 
+                        short: "AC",
                         color: "#4ade80",
-                        items: [
+                        subBrands: [
                             { name: "Sustainable Solutions", desc: "Eco-friendly products" },
                             { name: "Green Initiatives", desc: "Environmental projects" }
                         ]
@@ -602,12 +950,14 @@
             },
             eon: {
                 name: "EON Global",
+                icon: "fa-globe",
                 color: "#60a5fa",
                 brands: [
                     { 
                         name: "EON Technologies", 
+                        short: "ET",
                         color: "#60a5fa",
-                        items: [
+                        subBrands: [
                             { name: "EON Digital", desc: "Digital solutions" },
                             { name: "EON Cloud", desc: "Cloud services" }
                         ]
@@ -616,12 +966,14 @@
             },
             prime: {
                 name: "Prime Reserve",
+                icon: "fa-gem",
                 color: "#f97316",
                 brands: [
                     { 
                         name: "Prime Financial", 
+                        short: "PF",
                         color: "#f97316",
-                        items: [
+                        subBrands: [
                             { name: "Prime Wealth", desc: "Wealth management" },
                             { name: "Prime Investments", desc: "Investment services" }
                         ]
@@ -630,12 +982,14 @@
             },
             enative: {
                 name: "ENative",
+                icon: "fa-code",
                 color: "#c084fc",
                 brands: [
                     { 
                         name: "ENative Digital", 
+                        short: "ED",
                         color: "#c084fc",
-                        items: [
+                        subBrands: [
                             { name: "ENative Apps", desc: "Mobile applications" },
                             { name: "ENative Web", desc: "Web solutions" }
                         ]
@@ -644,12 +998,14 @@
             },
             aphorizo: {
                 name: "Aphorizo",
+                icon: "fa-paint-brush",
                 color: "#f472b6",
                 brands: [
                     { 
                         name: "Aphorizo Creative", 
+                        short: "AC",
                         color: "#f472b6",
-                        items: [
+                        subBrands: [
                             { name: "Aphorizo Design", desc: "Design services" },
                             { name: "Aphorizo Media", desc: "Media production" }
                         ]
@@ -659,110 +1015,181 @@
         };
 
         // DOM elements
-        const universe = document.getElementById('universe');
-        const suns = document.querySelectorAll('.sun');
+        const universeContent = document.getElementById('universeContent');
+        const sunContainers = document.querySelectorAll('.sun-container');
         const infoPanel = document.getElementById('infoPanel');
         const infoTitle = document.getElementById('infoTitle');
         const infoContent = document.getElementById('infoContent');
-        const closeInfoBtn = document.getElementById('closeInfo');
+        const closeInfoBtn = document.getElementById('closeInfoBtn');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileSunsList = document.getElementById('mobileSunsList');
+        const mobilePlanetsView = document.getElementById('mobilePlanetsView');
+        const mobileHint = document.getElementById('mobileHint');
         const searchBar = document.getElementById('searchBar');
-        const installPrompt = document.getElementById('installPrompt');
-        const installBtn = document.getElementById('installBtn');
-        const dismissInstallBtn = document.getElementById('dismissInstall');
-        let activeCluster = null;
-        let deferredPrompt;
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const resetViewBtn = document.getElementById('resetView');
+        
+        let currentScale = 1;
+        let activeSun = null;
+        let isMobile = window.innerWidth <= 768;
 
-        // Initialize brand clusters
-        function initBrandClusters() {
+        // Initialize the universe
+        function initUniverse() {
+            createPlanets();
+            setupMobileMenu();
+            setupEventListeners();
+            
+            // Check if image loaded, fallback to text
+            const tgeLogo = document.getElementById('tgeLogo');
+            tgeLogo.onerror = function() {
+                this.parentElement.innerHTML = 'TGE';
+            };
+        }
+
+        // Create planets for each sun
+        function createPlanets() {
             Object.keys(universeData).forEach(sunId => {
-                const sunEl = document.querySelector(`.sun.${sunId}`);
-                const clusterEl = document.getElementById(`${sunId}-cluster`);
+                const sunContainer = document.querySelector(`.sun-container.${sunId}`);
+                if (!sunContainer) return;
+                
                 const sunData = universeData[sunId];
+                const orbit = sunContainer.querySelector('.planet-orbit');
                 
-                if (!clusterEl) return;
-                
-                // Position cluster around sun
-                const sunRect = sunEl.getBoundingClientRect();
-                const universeRect = universe.getBoundingClientRect();
-                
-                const centerX = sunRect.left + sunRect.width/2 - universeRect.left;
-                const centerY = sunRect.top + sunRect.height/2 - universeRect.top;
-                
-                clusterEl.style.left = `${centerX}px`;
-                clusterEl.style.top = `${centerY}px`;
-                
-                // Clear existing items
-                clusterEl.innerHTML = '';
-                
-                // Add brands
-                sunData.brands.forEach((brand, brandIndex) => {
-                    const angle = (brandIndex / sunData.brands.length) * 2 * Math.PI;
-                    const radius = 120;
+                sunData.brands.forEach((brand, index) => {
+                    const angle = (index / sunData.brands.length) * 2 * Math.PI;
+                    const radius = orbit.offsetWidth / 2;
                     
-                    const brandEl = document.createElement('div');
-                    brandEl.className = 'brand-item';
-                    brandEl.textContent = brand.name.split(' ').map(w => w[0]).join('');
-                    brandEl.title = brand.name;
-                    brandEl.style.left = `${Math.cos(angle) * radius}px`;
-                    brandEl.style.top = `${Math.sin(angle) * radius}px`;
-                    brandEl.style.backgroundColor = brand.color;
-                    brandEl.dataset.brand = brand.name;
-                    brandEl.dataset.sun = sunId;
+                    const planet = document.createElement('div');
+                    planet.className = 'planet';
+                    planet.textContent = brand.short;
+                    planet.title = brand.name;
+                    planet.style.backgroundColor = brand.color;
+                    planet.style.borderColor = brand.color;
+                    planet.style.left = `${radius + Math.cos(angle) * radius}px`;
+                    planet.style.top = `${radius + Math.sin(angle) * radius}px`;
+                    planet.style.animationDelay = `${index * 0.5}s`;
                     
-                    brandEl.addEventListener('click', (e) => {
+                    planet.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        showBrandInfo(sunId, brand);
+                        showBrandInfo(sunData, brand);
                     });
                     
-                    clusterEl.appendChild(brandEl);
-                    
-                    // Add sub-items
-                    brand.items.forEach((item, itemIndex) => {
-                        const itemAngle = angle + (itemIndex - 1) * 0.3;
-                        const itemRadius = 60;
-                        
-                        const itemEl = document.createElement('div');
-                        itemEl.className = 'brand-item sub-item';
-                        itemEl.textContent = item.name.split(' ').map(w => w[0]).join('');
-                        itemEl.title = `${item.name}: ${item.desc}`;
-                        itemEl.style.left = `${Math.cos(itemAngle) * itemRadius}px`;
-                        itemEl.style.top = `${Math.sin(itemAngle) * itemRadius}px`;
-                        itemEl.style.backgroundColor = lightenColor(brand.color, 30);
-                        itemEl.dataset.item = item.name;
-                        
-                        itemEl.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            showItemInfo(item);
-                        });
-                        
-                        clusterEl.appendChild(itemEl);
-                    });
+                    orbit.appendChild(planet);
                 });
             });
         }
 
-        // Show brand info
-        function showBrandInfo(sunId, brand) {
-            const sunData = universeData[sunId];
+        // Setup mobile menu content
+        function setupMobileMenu() {
+            // Clear existing content
+            mobileSunsList.innerHTML = '';
+            
+            // Add sun items to mobile menu
+            Object.keys(universeData).forEach(sunId => {
+                const sunData = universeData[sunId];
+                
+                const sunItem = document.createElement('div');
+                sunItem.className = 'mobile-sun-item';
+                sunItem.dataset.sun = sunId;
+                
+                sunItem.innerHTML = `
+                    <div class="mobile-sun-header">
+                        <div class="mobile-sun-icon" style="background: ${sunData.color}">
+                            <i class="fas ${sunData.icon}"></i>
+                        </div>
+                        <div class="mobile-sun-name">${sunData.name}</div>
+                    </div>
+                    <div class="mobile-planets">
+                        ${sunData.brands.map(brand => `
+                            <div class="mobile-planet-item" style="border-left-color: ${brand.color}">
+                                <div class="mobile-planet-name">${brand.name}</div>
+                                <div class="mobile-sub-brands">
+                                    ${brand.subBrands.map(sub => `
+                                        <div class="mobile-sub-item">${sub.name}</div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                sunItem.addEventListener('click', () => {
+                    // On mobile, show planets view
+                    showMobilePlanetsView(sunData);
+                });
+                
+                mobileSunsList.appendChild(sunItem);
+            });
+        }
+
+        // Show mobile planets view
+        function showMobilePlanetsView(sunData) {
+            mobilePlanetsView.innerHTML = `
+                <div class="mobile-header">
+                    <button onclick="showMobileSunsList()" style="background:none;border:none;color:white;font-size:1.2rem;margin-right:10px;">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="mobile-title">${sunData.name}</div>
+                </div>
+                <div class="mobile-planets" style="margin-top:20px;">
+                    ${sunData.brands.map(brand => `
+                        <div class="mobile-sun-item" onclick="showBrandInfo(${JSON.stringify(sunData).replace(/"/g, '&quot;')}, ${JSON.stringify(brand).replace(/"/g, '&quot;')})">
+                            <div class="mobile-sun-header">
+                                <div class="mobile-sun-icon" style="background: ${brand.color}">
+                                    ${brand.short}
+                                </div>
+                                <div class="mobile-sun-name">${brand.name}</div>
+                            </div>
+                            <div style="font-size:0.9rem;color:rgba(255,255,255,0.7);margin-top:8px;">
+                                ${brand.subBrands.length} sub-brands
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            mobilePlanetsView.style.display = 'block';
+            mobileSunsList.style.display = 'none';
+        }
+
+        // Show mobile suns list
+        function showMobileSunsList() {
+            mobilePlanetsView.style.display = 'none';
+            mobileSunsList.style.display = 'grid';
+            mobilePlanetsView.innerHTML = '';
+        }
+
+        // Show brand information
+        function showBrandInfo(sunData, brand) {
             infoTitle.textContent = brand.name;
             
             infoContent.innerHTML = `
                 <div class="info-section">
-                    <h3><i class="fas fa-star"></i> Main Brand</h3>
-                    <ul class="info-list">
-                        <li><i class="fas fa-sun"></i> Part of: ${sunData.name}</li>
-                        <li><i class="fas fa-palette"></i> Sector: ${getSectorFromColor(brand.color)}</li>
+                    <h3><i class="fas fa-sun" style="color:${sunData.color}"></i> ${sunData.name}</h3>
+                    <ul class="brand-list">
+                        <li>
+                            <div class="brand-icon" style="background:${brand.color}">${brand.short}</div>
+                            <div>
+                                <strong>${brand.name}</strong>
+                                <div style="font-size:0.9rem;color:#666;margin-top:2px;">Main brand</div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-section">
-                    <h3><i class="fas fa-satellite"></i> Associated Brands</h3>
-                    <ul class="info-list">
-                        ${brand.items.map(item => `
+                    <h3><i class="fas fa-layer-group" style="color:${brand.color}"></i> Associated Brands</h3>
+                    <ul class="brand-list">
+                        ${brand.subBrands.map(subBrand => `
                             <li>
-                                <i class="fas fa-circle"></i>
+                                <div class="brand-icon" style="background:${brand.color};opacity:0.8;font-size:0.7rem">
+                                    <i class="fas fa-circle"></i>
+                                </div>
                                 <div>
-                                    <strong>${item.name}</strong>
-                                    <div style="font-size: 0.85rem; color: #666;">${item.desc}</div>
+                                    <strong>${subBrand.name}</strong>
+                                    <div style="font-size:0.9rem;color:#666;margin-top:2px;">${subBrand.desc}</div>
                                 </div>
                             </li>
                         `).join('')}
@@ -771,360 +1198,233 @@
             `;
             
             infoPanel.classList.add('active');
-        }
-
-        // Show item info
-        function showItemInfo(item) {
-            infoTitle.textContent = item.name;
-            infoContent.innerHTML = `
-                <div class="info-section">
-                    <h3><i class="fas fa-info-circle"></i> Details</h3>
-                    <ul class="info-list">
-                        <li><i class="fas fa-align-left"></i> Description: ${item.desc}</li>
-                        <li><i class="fas fa-layer-group"></i> Type: Sub-brand</li>
-                    </ul>
-                </div>
-            `;
-            infoPanel.classList.add('active');
-        }
-
-        // Event listeners for suns
-        suns.forEach(sun => {
-            sun.addEventListener('click', function() {
-                const clusterId = this.dataset.cluster;
-                
-                // Close other clusters
-                document.querySelectorAll('.brand-cluster.active').forEach(cluster => {
-                    if (cluster.id !== `${clusterId}-cluster`) {
-                        cluster.classList.remove('active');
-                    }
-                });
-                
-                // Toggle clicked cluster
-                const cluster = document.getElementById(`${clusterId}-cluster`);
-                if (cluster) {
-                    if (cluster.classList.contains('active')) {
-                        cluster.classList.remove('active');
-                        activeCluster = null;
-                    } else {
-                        cluster.classList.add('active');
-                        activeCluster = clusterId;
-                        showBrandInfo(clusterId, universeData[clusterId].brands[0]);
-                    }
-                }
-            });
-        });
-
-        // Close info panel
-        closeInfoBtn.addEventListener('click', () => {
-            infoPanel.classList.remove('active');
-        });
-
-        // Search functionality
-        searchBar.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
             
-            if (searchTerm.length < 2) {
-                // Reset view if search is cleared
-                if (activeCluster) {
-                    const cluster = document.getElementById(`${activeCluster}-cluster`);
-                    if (cluster) cluster.classList.add('active');
-                }
-                return;
+            // Close mobile menu if open
+            if (isMobile) {
+                mobileOverlay.classList.remove('active');
             }
-            
-            // Close all clusters first
-            document.querySelectorAll('.brand-cluster.active').forEach(c => c.classList.remove('active'));
-            
-            // Search in universe data
-            let foundItem = null;
-            Object.keys(universeData).forEach(sunId => {
-                const sunData = universeData[sunId];
-                
-                // Check sun name
-                if (sunData.name.toLowerCase().includes(searchTerm)) {
-                    const cluster = document.getElementById(`${sunId}-cluster`);
-                    if (cluster) {
-                        cluster.classList.add('active');
-                        activeCluster = sunId;
-                        showBrandInfo(sunId, sunData.brands[0]);
-                        foundItem = { type: 'sun', id: sunId };
-                    }
-                }
-                
-                // Check brands
-                sunData.brands.forEach(brand => {
-                    if (brand.name.toLowerCase().includes(searchTerm)) {
-                        const cluster = document.getElementById(`${sunId}-cluster`);
-                        if (cluster) {
-                            cluster.classList.add('active');
-                            activeCluster = sunId;
-                            showBrandInfo(sunId, brand);
-                            foundItem = { type: 'brand', id: sunId, brand: brand.name };
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sun click events
+            sunContainers.forEach(container => {
+                container.addEventListener('click', function(e) {
+                    const sunId = this.dataset.sun;
+                    const sunData = universeData[sunId];
+                    
+                    // Toggle active state
+                    sunContainers.forEach(c => {
+                        c.classList.remove('active');
+                        c.style.zIndex = '20';
+                    });
+                    
+                    if (activeSun === sunId) {
+                        activeSun = null;
+                    } else {
+                        this.classList.add('active');
+                        this.style.zIndex = '30';
+                        activeSun = sunId;
+                        
+                        // Show first brand info
+                        if (sunData.brands.length > 0) {
+                            showBrandInfo(sunData, sunData.brands[0]);
                         }
                     }
                     
-                    // Check sub-items
-                    brand.items.forEach(item => {
-                        if (item.name.toLowerCase().includes(searchTerm) || 
-                            item.desc.toLowerCase().includes(searchTerm)) {
-                            const cluster = document.getElementById(`${sunId}-cluster`);
-                            if (cluster) {
-                                cluster.classList.add('active');
-                                activeCluster = sunId;
-                                showItemInfo(item);
-                                foundItem = { type: 'item', id: sunId, item: item.name };
+                    e.stopPropagation();
+                });
+            });
+
+            // Close info panel
+            closeInfoBtn.addEventListener('click', () => {
+                infoPanel.classList.remove('active');
+            });
+
+            // Mobile menu
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileOverlay.classList.add('active');
+                showMobileSunsList();
+            });
+
+            closeMenuBtn.addEventListener('click', () => {
+                mobileOverlay.classList.remove('active');
+            });
+
+            // Search functionality
+            searchBar.addEventListener('input', function() {
+                const term = this.value.toLowerCase().trim();
+                if (term.length < 2) return;
+                
+                // Search in all data
+                for (const [sunId, sunData] of Object.entries(universeData)) {
+                    // Check sun name
+                    if (sunData.name.toLowerCase().includes(term)) {
+                        highlightSun(sunId);
+                        return;
+                    }
+                    
+                    // Check brands
+                    for (const brand of sunData.brands) {
+                        if (brand.name.toLowerCase().includes(term)) {
+                            highlightSun(sunId);
+                            showBrandInfo(sunData, brand);
+                            return;
+                        }
+                        
+                        // Check sub-brands
+                        for (const subBrand of brand.subBrands) {
+                            if (subBrand.name.toLowerCase().includes(term) || 
+                                subBrand.desc.toLowerCase().includes(term)) {
+                                highlightSun(sunId);
+                                showBrandInfo(sunData, brand);
+                                return;
                             }
                         }
-                    });
-                });
-            });
-            
-            // If nothing found, show message
-            if (!foundItem) {
-                infoTitle.textContent = "Search Results";
-                infoContent.innerHTML = `
-                    <div class="info-section">
-                        <h3><i class="fas fa-search"></i> No Results Found</h3>
-                        <p>No brands found matching "${searchTerm}"</p>
-                    </div>
-                `;
-                infoPanel.classList.add('active');
-            }
-        });
-
-        // Zoom controls
-        document.getElementById('zoomIn').addEventListener('click', () => {
-            universe.style.transform = `scale(${parseFloat(universe.style.transform?.replace('scale(', '') || 1) * 1.2})`;
-        });
-        
-        document.getElementById('zoomOut').addEventListener('click', () => {
-            universe.style.transform = `scale(${parseFloat(universe.style.transform?.replace('scale(', '') || 1) * 0.8})`;
-        });
-        
-        document.getElementById('resetView').addEventListener('click', () => {
-            universe.style.transform = 'scale(1)';
-            universe.style.transformOrigin = 'center';
-        });
-
-        // Drag to navigate
-        let isDragging = false;
-        let startX, startY;
-        let scrollLeft, scrollTop;
-
-        universe.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.pageX - universe.offsetLeft;
-            startY = e.pageY - universe.offsetTop;
-            scrollLeft = universe.scrollLeft;
-            scrollTop = universe.scrollTop;
-            universe.style.cursor = 'grabbing';
-        });
-
-        universe.addEventListener('mouseleave', () => {
-            isDragging = false;
-            universe.style.cursor = 'default';
-        });
-
-        universe.addEventListener('mouseup', () => {
-            isDragging = false;
-            universe.style.cursor = 'default';
-        });
-
-        universe.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.pageX - universe.offsetLeft;
-            const y = e.pageY - universe.offsetTop;
-            const walkX = (x - startX) * 2;
-            const walkY = (y - startY) * 2;
-            universe.scrollLeft = scrollLeft - walkX;
-            universe.scrollTop = scrollTop - walkY;
-        });
-
-        // Touch support for mobile
-        universe.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].pageX - universe.offsetLeft;
-            startY = e.touches[0].pageY - universe.offsetTop;
-            scrollLeft = universe.scrollLeft;
-            scrollTop = universe.scrollTop;
-        }, { passive: true });
-
-        universe.addEventListener('touchend', () => {
-            isDragging = false;
-        });
-
-        universe.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.touches[0].pageX - universe.offsetLeft;
-            const y = e.touches[0].pageY - universe.offsetTop;
-            const walkX = (x - startX) * 2;
-            const walkY = (y - startY) * 2;
-            universe.scrollLeft = scrollLeft - walkX;
-            universe.scrollTop = scrollTop - walkY;
-        }, { passive: false });
-
-        // PWA Installation
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show install prompt after 5 seconds
-            setTimeout(() => {
-                if (deferredPrompt) {
-                    installPrompt.classList.add('show');
+                    }
                 }
+            });
+
+            // Zoom controls
+            zoomInBtn.addEventListener('click', () => {
+                currentScale *= 1.2;
+                universeContent.style.transform = `scale(${currentScale})`;
+                universeContent.style.transformOrigin = 'center';
+            });
+
+            zoomOutBtn.addEventListener('click', () => {
+                currentScale *= 0.8;
+                universeContent.style.transform = `scale(${currentScale})`;
+                universeContent.style.transformOrigin = 'center';
+            });
+
+            resetViewBtn.addEventListener('click', () => {
+                currentScale = 1;
+                universeContent.style.transform = 'scale(1)';
+                universeContent.style.transformOrigin = 'center';
+            });
+
+            // Hide mobile hint after 5 seconds
+            setTimeout(() => {
+                mobileHint.style.opacity = '0';
+                setTimeout(() => {
+                    mobileHint.style.display = 'none';
+                }, 500);
             }, 5000);
-        });
 
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
+            // Touch gestures for mobile
+            let touchStartX, touchStartY, touchStartScale;
             
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            
-            if (outcome === 'accepted') {
-                installPrompt.classList.remove('show');
-            }
-            
-            deferredPrompt = null;
-        });
+            universeContent.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    // Pinch zoom
+                    const touch1 = e.touches[0];
+                    const touch2 = e.touches[1];
+                    touchStartScale = currentScale;
+                } else if (e.touches.length === 1) {
+                    // Single touch - start drag
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }, { passive: true });
 
-        dismissInstallBtn.addEventListener('click', () => {
-            installPrompt.classList.remove('show');
-        });
+            universeContent.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1) {
+                    // Single touch drag
+                    e.preventDefault();
+                    const touchX = e.touches[0].clientX;
+                    const touchY = e.touches[0].clientY;
+                    
+                    const deltaX = touchX - touchStartX;
+                    const deltaY = touchY - touchStartY;
+                    
+                    // Update transform
+                    const currentTransform = universeContent.style.transform.match(/translate\(([^)]+)\)/) || ['', '0px 0px'];
+                    const [_, translateValues] = currentTransform;
+                    const [currentX, currentY] = translateValues.split(' ').map(v => parseFloat(v));
+                    
+                    universeContent.style.transform = `translate(${currentX + deltaX}px, ${currentY + deltaY}px) scale(${currentScale})`;
+                    
+                    touchStartX = touchX;
+                    touchStartY = touchY;
+                }
+            }, { passive: false });
 
-        // Register service worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                isMobile = window.innerWidth <= 768;
+                if (!isMobile && mobileOverlay.classList.contains('active')) {
+                    mobileOverlay.classList.remove('active');
+                }
             });
         }
 
-        // Helper functions
-        function lightenColor(color, percent) {
-            const num = parseInt(color.replace("#", ""), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) + amt;
-            const G = (num >> 8 & 0x00FF) + amt;
-            const B = (num & 0x0000FF) + amt;
-            
-            return "#" + (
-                0x1000000 +
-                (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-                (B < 255 ? B < 1 ? 0 : B : 255)
-            ).toString(16).slice(1);
+        // Highlight a sun
+        function highlightSun(sunId) {
+            sunContainers.forEach(c => c.classList.remove('active'));
+            const sunContainer = document.querySelector(`.sun-container.${sunId}`);
+            if (sunContainer) {
+                sunContainer.classList.add('active');
+                sunContainer.style.zIndex = '30';
+                
+                // Add pulse animation
+                sunContainer.style.animation = 'pulse 0.5s 3';
+                setTimeout(() => {
+                    sunContainer.style.animation = '';
+                }, 1500);
+            }
         }
 
-        function getSectorFromColor(color) {
-            const colorMap = {
-                "#ff9e00": "Food & Hospitality",
-                "#4ade80": "Sustainability",
-                "#60a5fa": "Technology",
-                "#f97316": "Media & Entertainment",
-                "#c084fc": "Digital Solutions",
-                "#f472b6": "Creative Services"
-            };
-            return colorMap[color] || "General";
-        }
+        // Make functions available globally for mobile menu
+        window.showMobilePlanetsView = showMobilePlanetsView;
+        window.showMobileSunsList = showMobileSunsList;
+        window.showBrandInfo = showBrandInfo;
 
         // Initialize on load
         window.addEventListener('load', () => {
-            initBrandClusters();
+            initStars();
+            initUniverse();
             
             // Show welcome info
             setTimeout(() => {
                 infoTitle.textContent = "Welcome to The Great Empire";
                 infoContent.innerHTML = `
                     <div class="info-section">
-                        <h3><i class="fas fa-universe"></i> Explore the Universe</h3>
-                        <ul class="info-list">
-                            <li><i class="fas fa-sun"></i> Click on any sun to explore its brands</li>
-                            <li><i class="fas fa-search"></i> Use search to find specific brands</li>
-                            <li><i class="fas fa-hand-pointer"></i> Click on brand circles for details</li>
-                            <li><i class="fas fa-arrows-alt"></i> Drag to navigate, use +/- to zoom</li>
+                        <h3><i class="fas fa-universe" style="color:#4361ee"></i> Explore the Universe</h3>
+                        <ul class="brand-list">
+                            <li>
+                                <div class="brand-icon" style="background:#4361ee">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                                <div>
+                                    <strong>Click on any sun</strong>
+                                    <div style="font-size:0.9rem;color:#666">to explore its brands</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="brand-icon" style="background:#4cc9f0">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div>
+                                    <strong>Use search</strong>
+                                    <div style="font-size:0.9rem;color:#666">to find specific brands</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="brand-icon" style="background:#ff9e00">
+                                    <i class="fas fa-hand-pointer"></i>
+                                </div>
+                                <div>
+                                    <strong>Tap brand circles</strong>
+                                    <div style="font-size:0.9rem;color:#666">for detailed information</div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 `;
                 infoPanel.classList.add('active');
             }, 1000);
         });
-
-        // Handle window resize
-        window.addEventListener('resize', initBrandClusters);
-    </script>
-    
-    <!-- Service Worker for PWA -->
-    <script>
-        // Inline service worker registration
-        if ('serviceWorker' in navigator) {
-            const swContent = `
-                self.addEventListener('install', (event) => {
-                    event.waitUntil(
-                        caches.open('tge-universe-v1').then((cache) => {
-                            return cache.addAll([
-                                './',
-                                './index.html',
-                                './manifest.json'
-                            ]);
-                        })
-                    );
-                });
-
-                self.addEventListener('fetch', (event) => {
-                    event.respondWith(
-                        caches.match(event.request).then((response) => {
-                            return response || fetch(event.request);
-                        })
-                    );
-                });
-            `;
-            
-            const blob = new Blob([swContent], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            
-            navigator.serviceWorker.register(swUrl).then(registration => {
-                console.log('Service Worker registered with scope:', registration.scope);
-            }).catch(error => {
-                console.log('Service Worker registration failed:', error);
-            });
-        }
-    </script>
-    
-    <!-- Manifest for PWA -->
-    <script type="application/json" id="manifest-data">
-        {
-            "name": "TGE Universe",
-            "short_name": "TGE",
-            "description": "Explore The Great Empire brand universe",
-            "start_url": "./",
-            "display": "standalone",
-            "background_color": "#0a1128",
-            "theme_color": "#0a1128",
-            "orientation": "landscape",
-            "icons": [
-                {
-                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234361ee'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>T</text></svg>",
-                    "sizes": "96x96",
-                    "type": "image/svg+xml"
-                },
-                {
-                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234361ee'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>T</text></svg>",
-                    "sizes": "192x192",
-                    "type": "image/svg+xml"
-                },
-                {
-                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234361ee'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>T</text></svg>",
-                    "sizes": "512x512",
-                    "type": "image/svg+xml"
-                }
-            ]
-        }
     </script>
 </body>
 </html>
