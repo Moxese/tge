@@ -3,805 +3,1015 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Great Empire - Brand Galaxy</title>
+    <title>The Great Empire - Brand Universe</title>
+    <meta name="description" content="Explore The Great Empire galaxy of interconnected brands">
+    <meta name="theme-color" content="#0a1128">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #0c0f2e 0%, #1a1b3e 50%, #0c0f2e 100%);
-            color: #f0f0f0;
+            background: #0a1128;
+            color: #ffffff;
             min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            overflow: hidden;
         }
-        
+
+        .universe-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, #0a1128 0%, #050811 100%);
+        }
+
+        /* Star field */
         .stars {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            pointer-events: none;
         }
-        
+
         .star {
             position: absolute;
-            background-color: white;
+            background-color: #ffffff;
             border-radius: 50%;
+            animation: twinkle 3s infinite alternate;
         }
-        
-        .header {
-            text-align: center;
-            padding: 2rem 1rem;
-            background: rgba(10, 12, 40, 0.8);
-            border-bottom: 2px solid #3a3f8c;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #ffd166, #ff5e5b, #8a4fff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(138, 79, 255, 0.5);
-        }
-        
-        .header p {
-            font-size: 1.2rem;
-            color: #b0b0ff;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .galaxy-container {
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
             display: flex;
-            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: white;
+            cursor: pointer;
+            display: flex;
             align-items: center;
-            padding: 2rem;
-            min-height: 80vh;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
-        
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Main galaxy */
         .galaxy-center {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 3rem auto;
-        }
-        
-        .galaxy-core {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 120px;
             height: 120px;
-            background: radial-gradient(circle, #ff5e5b 0%, #8a4fff 70%, transparent 100%);
+        }
+
+        .tge-core {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #ffffff 0%, #4cc9f0 30%, #4361ee 70%, transparent 100%);
             border-radius: 50%;
-            box-shadow: 0 0 60px #ff5e5b, 0 0 100px #8a4fff;
-            animation: pulse 4s infinite alternate;
+            box-shadow: 
+                0 0 80px #4361ee,
+                0 0 120px rgba(67, 97, 238, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: pulse 4s infinite ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 700;
+            font-size: 1.4rem;
             color: white;
-            font-weight: bold;
-            font-size: 1.5rem;
-            z-index: 5;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
-        
+
+        /* Suns */
         .sun {
             position: absolute;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 5px;
-            z-index: 4;
-        }
-        
-        .sun:hover {
-            transform: scale(1.2);
-            z-index: 6;
-        }
-        
-        .sun-1 { top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 80px; background: radial-gradient(circle, #ffd166 0%, #ff9e00 70%); box-shadow: 0 0 30px #ffd166; }
-        .sun-2 { top: 20%; right: 10%; width: 70px; height: 70px; background: radial-gradient(circle, #5bff8a 0%, #00b347 70%); box-shadow: 0 0 25px #5bff8a; }
-        .sun-3 { bottom: 20%; right: 10%; width: 75px; height: 75px; background: radial-gradient(circle, #5bb3ff 0%, #0066cc 70%); box-shadow: 0 0 25px #5bb3ff; }
-        .sun-4 { bottom: 0; left: 50%; transform: translateX(-50%); width: 65px; height: 65px; background: radial-gradient(circle, #ff8a5b 0%, #cc4400 70%); box-shadow: 0 0 25px #ff8a5b; }
-        .sun-5 { bottom: 20%; left: 10%; width: 70px; height: 70px; background: radial-gradient(circle, #d166ff 0%, #8800cc 70%); box-shadow: 0 0 25px #d166ff; }
-        .sun-6 { top: 20%; left: 10%; width: 60px; height: 60px; background: radial-gradient(circle, #ff66b3 0%, #cc0066 70%); box-shadow: 0 0 20px #ff66b3; }
-        
-        .orbit {
-            position: absolute;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .orbit-1 { width: 400px; height: 400px; }
-        .orbit-2 { width: 500px; height: 500px; }
-        
-        .solar-system-view {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: none;
-        }
-        
-        .solar-system-view.active {
-            display: block;
-        }
-        
-        .back-button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #3a3f8c;
-            color: #b0b0ff;
-            padding: 0.5rem 1.5rem;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-bottom: 2rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(-5px);
-        }
-        
-        .sun-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #3a3f8c;
-        }
-        
-        .sun-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-        }
-        
-        .planets-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .planet {
-            background: rgba(30, 33, 70, 0.8);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
+            font-weight: 600;
+            font-size: 0;
             overflow: hidden;
+            z-index: 10;
+            filter: drop-shadow(0 0 10px currentColor);
         }
-        
-        .planet:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-            border-color: rgba(138, 79, 255, 0.5);
+
+        .sun:hover {
+            transform: scale(1.15);
+            font-size: 0.8rem;
+            z-index: 20;
         }
-        
-        .planet-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+
+        .sun.teleioo { 
+            top: 20%; left: 20%; 
+            width: 65px; height: 65px;
+            background: radial-gradient(circle, #ff9e00 0%, #ff6b00 100%);
+            box-shadow: 0 0 30px #ff9e00;
+            color: #ff9e00;
         }
-        
-        .planet-icon {
-            width: 50px;
-            height: 50px;
+        .sun.adamah { 
+            top: 15%; right: 25%; 
+            width: 60px; height: 60px;
+            background: radial-gradient(circle, #4ade80 0%, #16a34a 100%);
+            box-shadow: 0 0 25px #4ade80;
+            color: #4ade80;
+        }
+        .sun.eon { 
+            top: 40%; right: 15%; 
+            width: 70px; height: 70px;
+            background: radial-gradient(circle, #60a5fa 0%, #1d4ed8 100%);
+            box-shadow: 0 0 35px #60a5fa;
+            color: #60a5fa;
+        }
+        .sun.prime { 
+            bottom: 30%; right: 20%; 
+            width: 55px; height: 55px;
+            background: radial-gradient(circle, #f97316 0%, #ea580c 100%);
+            box-shadow: 0 0 20px #f97316;
+            color: #f97316;
+        }
+        .sun.enative { 
+            bottom: 20%; left: 30%; 
+            width: 62px; height: 62px;
+            background: radial-gradient(circle, #c084fc 0%, #9333ea 100%);
+            box-shadow: 0 0 28px #c084fc;
+            color: #c084fc;
+        }
+        .sun.aphorizo { 
+            top: 30%; left: 10%; 
+            width: 58px; height: 58px;
+            background: radial-gradient(circle, #f472b6 0%, #db2777 100%);
+            box-shadow: 0 0 22px #f472b6;
+            color: #f472b6;
+        }
+
+        /* Brand clusters */
+        .brand-cluster {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .brand-cluster.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        .brand-item {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            color: #0a1128;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 2px solid transparent;
+        }
+
+        .brand-item:hover {
+            transform: scale(1.2);
+            border-color: currentColor;
+            z-index: 30;
+        }
+
+        .brand-item.sub-item {
+            width: 32px;
+            height: 32px;
+            background: #f8f9fa;
+            font-size: 0.6rem;
+            font-weight: 500;
+        }
+
+        /* Info panel */
+        .info-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0a1128;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-top: 1px solid rgba(10, 17, 40, 0.1);
+            z-index: 1000;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+
+        .info-panel.active {
+            transform: translateY(0);
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #4361ee;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0a1128;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #0a1128;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+        }
+
+        .close-btn:hover {
+            background: rgba(10, 17, 40, 0.1);
+        }
+
+        .info-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-section h3 {
+            color: #4361ee;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(10, 17, 40, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-list i {
+            color: #4361ee;
+            width: 20px;
+        }
+
+        /* Navigation header */
+        .nav-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.25rem;
+        }
+
+        /* Search bar */
+        .search-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            max-width: 90%;
+            z-index: 1000;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            border: 1px solid rgba(10, 17, 40, 0.1);
+            color: #0a1128;
+            font-size: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar::placeholder {
+            color: rgba(10, 17, 40, 0.5);
+        }
+
+        /* Connection lines */
+        .connection {
+            position: absolute;
+            background: rgba(67, 97, 238, 0.2);
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* PWA Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #0a1128;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 350px;
+        }
+
+        .install-prompt.show {
+            transform: translateY(0);
+        }
+
+        .install-prompt h4 {
+            margin-bottom: 0.5rem;
+            color: #4361ee;
+        }
+
+        .install-prompt p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: rgba(10, 17, 40, 0.7);
+        }
+
+        .install-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .install-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .install-btn.primary {
+            background: #4361ee;
             color: white;
         }
-        
-        .planet-name {
-            font-size: 1.5rem;
-            font-weight: bold;
+
+        .install-btn.secondary {
+            background: rgba(10, 17, 40, 0.1);
+            color: #0a1128;
         }
-        
-        .moons-container {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .moon {
-            background: rgba(40, 43, 90, 0.8);
-            padding: 0.8rem;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .moon-icon {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-        }
-        
-        .add-planet, .add-moon {
-            margin-top: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.5);
-            padding: 0.8rem;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .add-planet:hover, .add-moon:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .instructions {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 1rem;
-            color: #b0b0ff;
-            font-size: 0.9rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 60px #ff5e5b, 0 0 100px #8a4fff; }
-            100% { box-shadow: 0 0 80px #ff5e5b, 0 0 120px #8a4fff; }
-        }
-        
-        @keyframes rotate {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .control-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #3a3f8c;
-            color: #b0b0ff;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
+            .search-container {
+                width: 300px;
             }
             
-            .galaxy-center {
-                width: 250px;
-                height: 250px;
+            .sun {
+                width: 50px !important;
+                height: 50px !important;
             }
             
-            .orbit-1 { width: 320px; height: 320px; }
-            .orbit-2 { width: 420px; height: 420px; }
+            .brand-item {
+                width: 36px;
+                height: 36px;
+                font-size: 0.6rem;
+            }
             
-            .planets-container {
+            .brand-item.sub-item {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .info-content {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    
-    <div class="header">
-        <h1>The Great Empire</h1>
-        <p>A dynamic universe of interconnected brands, constantly expanding and evolving. Click on any sun to explore its solar system.</p>
-    </div>
-    
-    <div class="galaxy-container">
-        <div class="galaxy-center">
-            <div class="galaxy-core">TGE</div>
-            
-            <div class="orbit orbit-1"></div>
-            <div class="orbit orbit-2"></div>
-            
-            <div class="sun sun-1" data-sun="teleioo">Teleioō Savour</div>
-            <div class="sun sun-2" data-sun="adamah">Adamah</div>
-            <div class="sun sun-3" data-sun="eon">EON Global</div>
-            <div class="sun sun-4" data-sun="prime">Prime Reserve</div>
-            <div class="sun sun-5" data-sun="enative">ENative</div>
-            <div class="sun sun-6" data-sun="aphorizo">Aphorizo</div>
+    <div class="universe-container" id="universe">
+        <div class="stars" id="stars"></div>
+        
+        <div class="nav-header">
+            <div class="logo">TGE</div>
+            <div class="tagline">The Great Empire</div>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search brands in the universe..." id="searchBar">
         </div>
         
         <div class="controls">
-            <button class="control-btn" id="resetView"><i class="fas fa-globe"></i> Galaxy View</button>
-            <button class="control-btn" id="addSun"><i class="fas fa-plus"></i> Add New Sun</button>
-            <button class="control-btn" id="infoBtn"><i class="fas fa-info-circle"></i> How to Expand</button>
+            <button class="control-btn" id="zoomIn">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="control-btn" id="zoomOut">
+                <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="control-btn" id="resetView">
+                <i class="fas fa-crosshairs"></i>
+            </button>
         </div>
         
-        <div class="instructions">
-            <p><i class="fas fa-lightbulb"></i> This universe is designed to expand infinitely. You can add new suns, planets, and moons as the empire grows.</p>
+        <div class="galaxy-center">
+            <div class="tge-core">TGE</div>
+        </div>
+        
+        <!-- Suns -->
+        <div class="sun teleioo" data-cluster="teleioo">Teleioō Savour</div>
+        <div class="sun adamah" data-cluster="adamah">Adamah</div>
+        <div class="sun eon" data-cluster="eon">EON Global</div>
+        <div class="sun prime" data-cluster="prime">Prime Reserve</div>
+        <div class="sun enative" data-cluster="enative">ENative</div>
+        <div class="sun aphorizo" data-cluster="aphorizo">Aphorizo</div>
+        
+        <!-- Brand clusters -->
+        <div class="brand-cluster" id="teleioo-cluster">
+            <!-- Brands will be positioned by JS -->
+        </div>
+        
+        <!-- Info Panel -->
+        <div class="info-panel" id="infoPanel">
+            <div class="info-header">
+                <h2 class="info-title" id="infoTitle">Brand Information</h2>
+                <button class="close-btn" id="closeInfo">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="info-content" id="infoContent">
+                <!-- Content will be populated by JS -->
+            </div>
+        </div>
+        
+        <!-- PWA Install Prompt -->
+        <div class="install-prompt" id="installPrompt">
+            <h4>Install TGE Universe</h4>
+            <p>Add to your home screen for fullscreen experience and offline access</p>
+            <div class="install-buttons">
+                <button class="install-btn primary" id="installBtn">Install</button>
+                <button class="install-btn secondary" id="dismissInstall">Later</button>
+            </div>
         </div>
     </div>
-    
-    <!-- Solar System Views -->
-    <div class="solar-system-view" id="teleioo-view">
-        <button class="back-button"><i class="fas fa-arrow-left"></i> Back to Galaxy</button>
-        
-        <div class="sun-header">
-            <div class="sun-icon" style="background: radial-gradient(circle, #ffd166 0%, #ff9e00 70%); box-shadow: 0 0 20px #ffd166;">
-                <i class="fas fa-sun"></i>
-            </div>
-            <div>
-                <h2>Teleioō Savour Solar System</h2>
-                <p>The epicenter of culinary, travel, and media brands</p>
-            </div>
-        </div>
-        
-        <div class="planets-container" id="teleioo-planets">
-            <!-- Planets will be populated by JavaScript -->
-        </div>
-        
-        <div class="add-planet" id="add-teleioo-planet">
-            <i class="fas fa-plus"></i> Add New Planet (Brand) to Teleioō Savour
-        </div>
-    </div>
-    
-    <!-- Other solar system views would follow the same pattern -->
-    
+
     <script>
-        // Create stars background
+        // Create stars
         const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 300; i++) {
             const star = document.createElement('div');
-            star.classList.add('star');
-            star.style.width = `${Math.random() * 3}px`;
-            star.style.height = star.style.width;
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
             star.style.left = `${Math.random() * 100}%`;
             star.style.top = `${Math.random() * 100}%`;
-            star.style.opacity = Math.random() * 0.8 + 0.2;
+            star.style.opacity = Math.random() * 0.6 + 0.2;
+            star.style.animationDelay = `${Math.random() * 3}s`;
             starsContainer.appendChild(star);
         }
-        
-        // Galaxy data structure
-        const galaxyData = {
-            "teleioo": {
+
+        // Universe data
+        const universeData = {
+            teleioo: {
                 name: "Teleioō Savour",
-                color: "#ffd166",
-                planets: [
-                    {
-                        name: "Fusion Foods",
+                color: "#ff9e00",
+                brands: [
+                    { 
+                        name: "Fusion Foods", 
                         color: "#ff9e00",
-                        moons: [
-                            { name: "Mugs and Dines", description: "A culinary brand" },
-                            { name: "Fusion Stores", description: "Raw food store" },
-                            { name: "Sip-Up", description: "Beverages and Drinks brand" }
+                        items: [
+                            { name: "Mugs and Dines", desc: "Culinary brand" },
+                            { name: "Fusion Stores", desc: "Raw food store" },
+                            { name: "Sip-Up", desc: "Beverages and Drinks" }
                         ]
                     },
-                    {
-                        name: "Teleioō Safaris",
-                        color: "#5bff8a",
-                        moons: [
-                            { name: "Slair Safaris", description: "Travel Agency brand" },
-                            { name: "Book-Up Trips", description: "Trips and Vacations brand" }
+                    { 
+                        name: "Teleioō Safaris", 
+                        color: "#4ade80",
+                        items: [
+                            { name: "Slair Safaris", desc: "Travel Agency" },
+                            { name: "Book-Up Trips", desc: "Trips and Vacations" }
                         ]
                     },
-                    {
-                        name: "Hub Savoir",
-                        color: "#5bb3ff",
-                        moons: [
-                            { name: "Hekima Hub", description: "Courses brand that sells courses" },
-                            { name: "Hekima Tutors", description: "A private tutoring Platform" }
+                    { 
+                        name: "Hub Savoir", 
+                        color: "#60a5fa",
+                        items: [
+                            { name: "Hekima Hub", desc: "Courses brand" },
+                            { name: "Hekima Tutors", desc: "Private tutoring Platform" }
                         ]
                     },
-                    {
-                        name: "Big Media Alliance (BMA)",
-                        color: "#ff8a5b",
-                        moons: [
-                            { name: "School of Media and Arts", description: "Educational institution for media" },
-                            { name: "Global News Channel", description: "Worldwide news broadcasting" }
+                    { 
+                        name: "Big Media Alliance", 
+                        color: "#f97316",
+                        items: [
+                            { name: "School of Media and Arts", desc: "Educational institution" },
+                            { name: "Global News Channel", desc: "Worldwide news broadcasting" }
                         ]
                     }
                 ]
             },
-            "adamah": {
+            adamah: {
                 name: "Adamah",
-                color: "#5bff8a",
-                planets: [
-                    {
-                        name: "Planet 1",
-                        color: "#00b347",
-                        moons: [
-                            { name: "Moon A", description: "Description for Moon A" },
-                            { name: "Moon B", description: "Description for Moon B" }
+                color: "#4ade80",
+                brands: [
+                    { 
+                        name: "Adamah Core", 
+                        color: "#4ade80",
+                        items: [
+                            { name: "Sustainable Solutions", desc: "Eco-friendly products" },
+                            { name: "Green Initiatives", desc: "Environmental projects" }
                         ]
                     }
                 ]
             },
-            "eon": {
+            eon: {
                 name: "EON Global",
-                color: "#5bb3ff",
-                planets: [
-                    {
-                        name: "Planet 1",
-                        color: "#0066cc",
-                        moons: [
-                            { name: "Moon A", description: "Description for Moon A" }
+                color: "#60a5fa",
+                brands: [
+                    { 
+                        name: "EON Technologies", 
+                        color: "#60a5fa",
+                        items: [
+                            { name: "EON Digital", desc: "Digital solutions" },
+                            { name: "EON Cloud", desc: "Cloud services" }
                         ]
                     }
                 ]
             },
-            "prime": {
+            prime: {
                 name: "Prime Reserve",
-                color: "#ff8a5b",
-                planets: [
-                    {
-                        name: "Planet 1",
-                        color: "#cc4400",
-                        moons: [
-                            { name: "Moon A", description: "Description for Moon A" },
-                            { name: "Moon B", description: "Description for Moon B" }
+                color: "#f97316",
+                brands: [
+                    { 
+                        name: "Prime Financial", 
+                        color: "#f97316",
+                        items: [
+                            { name: "Prime Wealth", desc: "Wealth management" },
+                            { name: "Prime Investments", desc: "Investment services" }
                         ]
                     }
                 ]
             },
-            "enative": {
+            enative: {
                 name: "ENative",
-                color: "#d166ff",
-                planets: [
-                    {
-                        name: "Planet 1",
-                        color: "#8800cc",
-                        moons: [
-                            { name: "Moon A", description: "Description for Moon A" }
+                color: "#c084fc",
+                brands: [
+                    { 
+                        name: "ENative Digital", 
+                        color: "#c084fc",
+                        items: [
+                            { name: "ENative Apps", desc: "Mobile applications" },
+                            { name: "ENative Web", desc: "Web solutions" }
                         ]
                     }
                 ]
             },
-            "aphorizo": {
+            aphorizo: {
                 name: "Aphorizo",
-                color: "#ff66b3",
-                planets: [
-                    {
-                        name: "Planet 1",
-                        color: "#cc0066",
-                        moons: [
-                            { name: "Moon A", description: "Description for Moon A" },
-                            { name: "Moon B", description: "Description for Moon B" }
+                color: "#f472b6",
+                brands: [
+                    { 
+                        name: "Aphorizo Creative", 
+                        color: "#f472b6",
+                        items: [
+                            { name: "Aphorizo Design", desc: "Design services" },
+                            { name: "Aphorizo Media", desc: "Media production" }
                         ]
                     }
                 ]
             }
         };
-        
+
         // DOM elements
-        const galaxyView = document.querySelector('.galaxy-container');
-        const solarSystemViews = document.querySelectorAll('.solar-system-view');
-        const sunElements = document.querySelectorAll('.sun');
-        const backButtons = document.querySelectorAll('.back-button');
-        const resetViewBtn = document.getElementById('resetView');
-        const addSunBtn = document.getElementById('addSun');
-        const infoBtn = document.getElementById('infoBtn');
-        
-        // Initialize the first solar system view
-        initSolarSystemView('teleioo');
-        
-        // Event listeners for sun clicks
-        sunElements.forEach(sun => {
+        const universe = document.getElementById('universe');
+        const suns = document.querySelectorAll('.sun');
+        const infoPanel = document.getElementById('infoPanel');
+        const infoTitle = document.getElementById('infoTitle');
+        const infoContent = document.getElementById('infoContent');
+        const closeInfoBtn = document.getElementById('closeInfo');
+        const searchBar = document.getElementById('searchBar');
+        const installPrompt = document.getElementById('installPrompt');
+        const installBtn = document.getElementById('installBtn');
+        const dismissInstallBtn = document.getElementById('dismissInstall');
+        let activeCluster = null;
+        let deferredPrompt;
+
+        // Initialize brand clusters
+        function initBrandClusters() {
+            Object.keys(universeData).forEach(sunId => {
+                const sunEl = document.querySelector(`.sun.${sunId}`);
+                const clusterEl = document.getElementById(`${sunId}-cluster`);
+                const sunData = universeData[sunId];
+                
+                if (!clusterEl) return;
+                
+                // Position cluster around sun
+                const sunRect = sunEl.getBoundingClientRect();
+                const universeRect = universe.getBoundingClientRect();
+                
+                const centerX = sunRect.left + sunRect.width/2 - universeRect.left;
+                const centerY = sunRect.top + sunRect.height/2 - universeRect.top;
+                
+                clusterEl.style.left = `${centerX}px`;
+                clusterEl.style.top = `${centerY}px`;
+                
+                // Clear existing items
+                clusterEl.innerHTML = '';
+                
+                // Add brands
+                sunData.brands.forEach((brand, brandIndex) => {
+                    const angle = (brandIndex / sunData.brands.length) * 2 * Math.PI;
+                    const radius = 120;
+                    
+                    const brandEl = document.createElement('div');
+                    brandEl.className = 'brand-item';
+                    brandEl.textContent = brand.name.split(' ').map(w => w[0]).join('');
+                    brandEl.title = brand.name;
+                    brandEl.style.left = `${Math.cos(angle) * radius}px`;
+                    brandEl.style.top = `${Math.sin(angle) * radius}px`;
+                    brandEl.style.backgroundColor = brand.color;
+                    brandEl.dataset.brand = brand.name;
+                    brandEl.dataset.sun = sunId;
+                    
+                    brandEl.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showBrandInfo(sunId, brand);
+                    });
+                    
+                    clusterEl.appendChild(brandEl);
+                    
+                    // Add sub-items
+                    brand.items.forEach((item, itemIndex) => {
+                        const itemAngle = angle + (itemIndex - 1) * 0.3;
+                        const itemRadius = 60;
+                        
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'brand-item sub-item';
+                        itemEl.textContent = item.name.split(' ').map(w => w[0]).join('');
+                        itemEl.title = `${item.name}: ${item.desc}`;
+                        itemEl.style.left = `${Math.cos(itemAngle) * itemRadius}px`;
+                        itemEl.style.top = `${Math.sin(itemAngle) * itemRadius}px`;
+                        itemEl.style.backgroundColor = lightenColor(brand.color, 30);
+                        itemEl.dataset.item = item.name;
+                        
+                        itemEl.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showItemInfo(item);
+                        });
+                        
+                        clusterEl.appendChild(itemEl);
+                    });
+                });
+            });
+        }
+
+        // Show brand info
+        function showBrandInfo(sunId, brand) {
+            const sunData = universeData[sunId];
+            infoTitle.textContent = brand.name;
+            
+            infoContent.innerHTML = `
+                <div class="info-section">
+                    <h3><i class="fas fa-star"></i> Main Brand</h3>
+                    <ul class="info-list">
+                        <li><i class="fas fa-sun"></i> Part of: ${sunData.name}</li>
+                        <li><i class="fas fa-palette"></i> Sector: ${getSectorFromColor(brand.color)}</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fas fa-satellite"></i> Associated Brands</h3>
+                    <ul class="info-list">
+                        ${brand.items.map(item => `
+                            <li>
+                                <i class="fas fa-circle"></i>
+                                <div>
+                                    <strong>${item.name}</strong>
+                                    <div style="font-size: 0.85rem; color: #666;">${item.desc}</div>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            infoPanel.classList.add('active');
+        }
+
+        // Show item info
+        function showItemInfo(item) {
+            infoTitle.textContent = item.name;
+            infoContent.innerHTML = `
+                <div class="info-section">
+                    <h3><i class="fas fa-info-circle"></i> Details</h3>
+                    <ul class="info-list">
+                        <li><i class="fas fa-align-left"></i> Description: ${item.desc}</li>
+                        <li><i class="fas fa-layer-group"></i> Type: Sub-brand</li>
+                    </ul>
+                </div>
+            `;
+            infoPanel.classList.add('active');
+        }
+
+        // Event listeners for suns
+        suns.forEach(sun => {
             sun.addEventListener('click', function() {
-                const sunId = this.getAttribute('data-sun');
-                showSolarSystem(sunId);
+                const clusterId = this.dataset.cluster;
+                
+                // Close other clusters
+                document.querySelectorAll('.brand-cluster.active').forEach(cluster => {
+                    if (cluster.id !== `${clusterId}-cluster`) {
+                        cluster.classList.remove('active');
+                    }
+                });
+                
+                // Toggle clicked cluster
+                const cluster = document.getElementById(`${clusterId}-cluster`);
+                if (cluster) {
+                    if (cluster.classList.contains('active')) {
+                        cluster.classList.remove('active');
+                        activeCluster = null;
+                    } else {
+                        cluster.classList.add('active');
+                        activeCluster = clusterId;
+                        showBrandInfo(clusterId, universeData[clusterId].brands[0]);
+                    }
+                }
             });
         });
-        
-        // Event listeners for back buttons
-        backButtons.forEach(button => {
-            button.addEventListener('click', showGalaxy);
+
+        // Close info panel
+        closeInfoBtn.addEventListener('click', () => {
+            infoPanel.classList.remove('active');
+        });
+
+        // Search functionality
+        searchBar.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            if (searchTerm.length < 2) {
+                // Reset view if search is cleared
+                if (activeCluster) {
+                    const cluster = document.getElementById(`${activeCluster}-cluster`);
+                    if (cluster) cluster.classList.add('active');
+                }
+                return;
+            }
+            
+            // Close all clusters first
+            document.querySelectorAll('.brand-cluster.active').forEach(c => c.classList.remove('active'));
+            
+            // Search in universe data
+            let foundItem = null;
+            Object.keys(universeData).forEach(sunId => {
+                const sunData = universeData[sunId];
+                
+                // Check sun name
+                if (sunData.name.toLowerCase().includes(searchTerm)) {
+                    const cluster = document.getElementById(`${sunId}-cluster`);
+                    if (cluster) {
+                        cluster.classList.add('active');
+                        activeCluster = sunId;
+                        showBrandInfo(sunId, sunData.brands[0]);
+                        foundItem = { type: 'sun', id: sunId };
+                    }
+                }
+                
+                // Check brands
+                sunData.brands.forEach(brand => {
+                    if (brand.name.toLowerCase().includes(searchTerm)) {
+                        const cluster = document.getElementById(`${sunId}-cluster`);
+                        if (cluster) {
+                            cluster.classList.add('active');
+                            activeCluster = sunId;
+                            showBrandInfo(sunId, brand);
+                            foundItem = { type: 'brand', id: sunId, brand: brand.name };
+                        }
+                    }
+                    
+                    // Check sub-items
+                    brand.items.forEach(item => {
+                        if (item.name.toLowerCase().includes(searchTerm) || 
+                            item.desc.toLowerCase().includes(searchTerm)) {
+                            const cluster = document.getElementById(`${sunId}-cluster`);
+                            if (cluster) {
+                                cluster.classList.add('active');
+                                activeCluster = sunId;
+                                showItemInfo(item);
+                                foundItem = { type: 'item', id: sunId, item: item.name };
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // If nothing found, show message
+            if (!foundItem) {
+                infoTitle.textContent = "Search Results";
+                infoContent.innerHTML = `
+                    <div class="info-section">
+                        <h3><i class="fas fa-search"></i> No Results Found</h3>
+                        <p>No brands found matching "${searchTerm}"</p>
+                    </div>
+                `;
+                infoPanel.classList.add('active');
+            }
+        });
+
+        // Zoom controls
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            universe.style.transform = `scale(${parseFloat(universe.style.transform?.replace('scale(', '') || 1) * 1.2})`;
         });
         
-        // Event listener for reset view button
-        resetViewBtn.addEventListener('click', showGalaxy);
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            universe.style.transform = `scale(${parseFloat(universe.style.transform?.replace('scale(', '') || 1) * 0.8})`;
+        });
         
-        // Event listener for add sun button
-        addSunBtn.addEventListener('click', addNewSun);
-        
-        // Event listener for info button
-        infoBtn.addEventListener('click', showInstructions);
-        
-        // Function to show a solar system
-        function showSolarSystem(sunId) {
-            galaxyView.style.display = 'none';
-            solarSystemViews.forEach(view => {
-                view.classList.remove('active');
-            });
+        document.getElementById('resetView').addEventListener('click', () => {
+            universe.style.transform = 'scale(1)';
+            universe.style.transformOrigin = 'center';
+        });
+
+        // Drag to navigate
+        let isDragging = false;
+        let startX, startY;
+        let scrollLeft, scrollTop;
+
+        universe.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - universe.offsetLeft;
+            startY = e.pageY - universe.offsetTop;
+            scrollLeft = universe.scrollLeft;
+            scrollTop = universe.scrollTop;
+            universe.style.cursor = 'grabbing';
+        });
+
+        universe.addEventListener('mouseleave', () => {
+            isDragging = false;
+            universe.style.cursor = 'default';
+        });
+
+        universe.addEventListener('mouseup', () => {
+            isDragging = false;
+            universe.style.cursor = 'default';
+        });
+
+        universe.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - universe.offsetLeft;
+            const y = e.pageY - universe.offsetTop;
+            const walkX = (x - startX) * 2;
+            const walkY = (y - startY) * 2;
+            universe.scrollLeft = scrollLeft - walkX;
+            universe.scrollTop = scrollTop - walkY;
+        });
+
+        // Touch support for mobile
+        universe.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].pageX - universe.offsetLeft;
+            startY = e.touches[0].pageY - universe.offsetTop;
+            scrollLeft = universe.scrollLeft;
+            scrollTop = universe.scrollTop;
+        }, { passive: true });
+
+        universe.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        universe.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.touches[0].pageX - universe.offsetLeft;
+            const y = e.touches[0].pageY - universe.offsetTop;
+            const walkX = (x - startX) * 2;
+            const walkY = (y - startY) * 2;
+            universe.scrollLeft = scrollLeft - walkX;
+            universe.scrollTop = scrollTop - walkY;
+        }, { passive: false });
+
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
             
-            const targetView = document.getElementById(`${sunId}-view`);
-            if (targetView) {
-                targetView.classList.add('active');
-                initSolarSystemView(sunId);
+            // Show install prompt after 5 seconds
+            setTimeout(() => {
+                if (deferredPrompt) {
+                    installPrompt.classList.add('show');
+                }
+            }, 5000);
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                installPrompt.classList.remove('show');
             }
-        }
-        
-        // Function to show the galaxy view
-        function showGalaxy() {
-            galaxyView.style.display = 'flex';
-            solarSystemViews.forEach(view => {
-                view.classList.remove('active');
+            
+            deferredPrompt = null;
+        });
+
+        dismissInstallBtn.addEventListener('click', () => {
+            installPrompt.classList.remove('show');
+        });
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
             });
         }
-        
-        // Function to initialize a solar system view
-        function initSolarSystemView(sunId) {
-            const sunData = galaxyData[sunId];
-            if (!sunData) return;
-            
-            const planetsContainer = document.getElementById(`${sunId}-planets`);
-            if (!planetsContainer) return;
-            
-            // Clear the container
-            planetsContainer.innerHTML = '';
-            
-            // Add planets
-            sunData.planets.forEach((planet, index) => {
-                const planetElement = createPlanetElement(planet, sunId, index);
-                planetsContainer.appendChild(planetElement);
-            });
-            
-            // Add event listener for adding new planet
-            const addPlanetBtn = document.getElementById(`add-${sunId}-planet`);
-            if (addPlanetBtn) {
-                addPlanetBtn.onclick = function() {
-                    addNewPlanet(sunId);
-                };
-            }
-        }
-        
-        // Function to create a planet element
-        function createPlanetElement(planet, sunId, planetIndex) {
-            const planetElement = document.createElement('div');
-            planetElement.className = 'planet';
-            planetElement.innerHTML = `
-                <div class="planet-header">
-                    <div class="planet-icon" style="background: ${planet.color};">
-                        <i class="fas fa-globe-americas"></i>
-                    </div>
-                    <div class="planet-name">${planet.name}</div>
-                </div>
-                <div class="moons-container" id="${sunId}-planet-${planetIndex}-moons">
-                    ${planet.moons.map(moon => `
-                        <div class="moon">
-                            <div class="moon-icon"><i class="fas fa-moon"></i></div>
-                            <div>
-                                <div><strong>${moon.name}</strong></div>
-                                <div style="font-size: 0.8rem; color: #b0b0ff;">${moon.description}</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="add-moon" data-sun="${sunId}" data-planet="${planetIndex}">
-                    <i class="fas fa-plus"></i> Add New Moon (Sub-brand)
-                </div>
-            `;
-            
-            // Add event listener for adding new moon
-            const addMoonBtn = planetElement.querySelector('.add-moon');
-            addMoonBtn.addEventListener('click', function() {
-                const sunId = this.getAttribute('data-sun');
-                const planetIndex = this.getAttribute('data-planet');
-                addNewMoon(sunId, planetIndex);
-            });
-            
-            return planetElement;
-        }
-        
-        // Function to add a new sun
-        function addNewSun() {
-            const sunNames = ["Nova Lux", "Stellaris", "Helios Prime", "Solaris Maxima", "Lumina"];
-            const sunColors = ["#ff9966", "#66ffcc", "#9966ff", "#ff66aa", "#66aaff"];
-            const randomIndex = Math.floor(Math.random() * sunNames.length);
-            
-            const newSunId = sunNames[randomIndex].toLowerCase().replace(/\s+/g, '-');
-            const newSunName = sunNames[randomIndex];
-            const newSunColor = sunColors[randomIndex];
-            
-            // Add to data structure
-            galaxyData[newSunId] = {
-                name: newSunName,
-                color: newSunColor,
-                planets: []
-            };
-            
-            // Create a new sun element in the galaxy
-            const galaxyCenter = document.querySelector('.galaxy-center');
-            const newSun = document.createElement('div');
-            newSun.className = 'sun';
-            newSun.setAttribute('data-sun', newSunId);
-            newSun.textContent = newSunName;
-            
-            // Position randomly in an orbit
-            const orbitNum = Math.random() > 0.5 ? 1 : 2;
-            const angle = Math.random() * 2 * Math.PI;
-            const orbitRadius = orbitNum === 1 ? 200 : 250;
-            const centerX = 150; // Half of galaxy-center width
-            const centerY = 150; // Half of galaxy-center height
-            
-            const posX = centerX + orbitRadius * Math.cos(angle);
-            const posY = centerY + orbitRadius * Math.sin(angle);
-            
-            newSun.style.left = `${posX}px`;
-            newSun.style.top = `${posY}px`;
-            newSun.style.background = `radial-gradient(circle, ${newSunColor} 0%, ${darkenColor(newSunColor, 30)} 70%)`;
-            newSun.style.boxShadow = `0 0 25px ${newSunColor}`;
-            
-            galaxyCenter.appendChild(newSun);
-            
-            // Add event listener
-            newSun.addEventListener('click', function() {
-                const sunId = this.getAttribute('data-sun');
-                // Create solar system view if it doesn't exist
-                createSolarSystemView(newSunId, newSunName, newSunColor);
-                showSolarSystem(sunId);
-            });
-            
-            // Create solar system view for the new sun
-            createSolarSystemView(newSunId, newSunName, newSunColor);
-            
-            alert(`New sun "${newSunName}" added to The Great Empire! Click on it to explore.`);
-        }
-        
-        // Function to create a solar system view for a new sun
-        function createSolarSystemView(sunId, sunName, sunColor) {
-            // Check if view already exists
-            if (document.getElementById(`${sunId}-view`)) return;
-            
-            // Create the new view
-            const newView = document.createElement('div');
-            newView.className = 'solar-system-view';
-            newView.id = `${sunId}-view`;
-            newView.innerHTML = `
-                <button class="back-button"><i class="fas fa-arrow-left"></i> Back to Galaxy</button>
-                
-                <div class="sun-header">
-                    <div class="sun-icon" style="background: radial-gradient(circle, ${sunColor} 0%, ${darkenColor(sunColor, 30)} 70%); box-shadow: 0 0 20px ${sunColor};">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <div>
-                        <h2>${sunName} Solar System</h2>
-                        <p>A new frontier in The Great Empire galaxy</p>
-                    </div>
-                </div>
-                
-                <div class="planets-container" id="${sunId}-planets">
-                    <!-- Planets will be added here -->
-                </div>
-                
-                <div class="add-planet" id="add-${sunId}-planet">
-                    <i class="fas fa-plus"></i> Add New Planet (Brand) to ${sunName}
-                </div>
-            `;
-            
-            // Add to the body
-            document.body.appendChild(newView);
-            
-            // Add event listeners
-            const backButton = newView.querySelector('.back-button');
-            backButton.addEventListener('click', showGalaxy);
-            
-            const addPlanetBtn = newView.querySelector(`#add-${sunId}-planet`);
-            addPlanetBtn.addEventListener('click', function() {
-                addNewPlanet(sunId);
-            });
-            
-            // Initialize with empty solar system
-            initSolarSystemView(sunId);
-        }
-        
-        // Function to add a new planet
-        function addNewPlanet(sunId) {
-            const planetNames = ["Nexus Core", "Vertex Solutions", "Apex Ventures", "Quantum Innovations", "Pinnacle Group"];
-            const planetColors = ["#ff9966", "#66ffcc", "#9966ff", "#ff66aa", "#66aaff"];
-            const randomIndex = Math.floor(Math.random() * planetNames.length);
-            
-            const newPlanet = {
-                name: planetNames[randomIndex],
-                color: planetColors[randomIndex],
-                moons: []
-            };
-            
-            // Add to data structure
-            galaxyData[sunId].planets.push(newPlanet);
-            
-            // Refresh the solar system view
-            initSolarSystemView(sunId);
-            
-            alert(`New planet "${newPlanet.name}" added to ${galaxyData[sunId].name}!`);
-        }
-        
-        // Function to add a new moon
-        function addNewMoon(sunId, planetIndex) {
-            const moonNames = ["Lunar Base", "Orbital Station", "Satellite Hub", "Cosmic Outpost", "Stellar Node"];
-            const moonTypes = ["Technology", "Services", "Products", "Media", "Consulting"];
-            const randomNameIndex = Math.floor(Math.random() * moonNames.length);
-            const randomTypeIndex = Math.floor(Math.random() * moonTypes.length);
-            
-            const newMoon = {
-                name: `${moonNames[randomNameIndex]} ${moonTypes[randomTypeIndex]}`,
-                description: `A ${moonTypes[randomTypeIndex].toLowerCase()} sub-brand`
-            };
-            
-            // Add to data structure
-            galaxyData[sunId].planets[planetIndex].moons.push(newMoon);
-            
-            // Refresh the solar system view
-            initSolarSystemView(sunId);
-            
-            alert(`New moon "${newMoon.name}" added to ${galaxyData[sunId].planets[planetIndex].name}!`);
-        }
-        
-        // Function to show instructions
-        function showInstructions() {
-            alert("HOW TO EXPAND THE TGE UNIVERSE:\n\n1. Click 'Add New Sun' to create a new solar system\n2. Click on any sun to explore its planets\n3. Inside a solar system, click 'Add New Planet' to create brands\n4. On any planet, click 'Add New Moon' to create sub-brands\n\nThis structure can expand infinitely as The Great Empire grows!");
-        }
-        
-        // Helper function to darken a color
-        function darkenColor(color, percent) {
+
+        // Helper functions
+        function lightenColor(color, percent) {
             const num = parseInt(color.replace("#", ""), 16);
             const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) - amt;
-            const G = (num >> 8 & 0x00FF) - amt;
-            const B = (num & 0x0000FF) - amt;
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
             
             return "#" + (
                 0x1000000 +
@@ -809,6 +1019,111 @@
                 (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
                 (B < 255 ? B < 1 ? 0 : B : 255)
             ).toString(16).slice(1);
+        }
+
+        function getSectorFromColor(color) {
+            const colorMap = {
+                "#ff9e00": "Food & Hospitality",
+                "#4ade80": "Sustainability",
+                "#60a5fa": "Technology",
+                "#f97316": "Media & Entertainment",
+                "#c084fc": "Digital Solutions",
+                "#f472b6": "Creative Services"
+            };
+            return colorMap[color] || "General";
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initBrandClusters();
+            
+            // Show welcome info
+            setTimeout(() => {
+                infoTitle.textContent = "Welcome to The Great Empire";
+                infoContent.innerHTML = `
+                    <div class="info-section">
+                        <h3><i class="fas fa-universe"></i> Explore the Universe</h3>
+                        <ul class="info-list">
+                            <li><i class="fas fa-sun"></i> Click on any sun to explore its brands</li>
+                            <li><i class="fas fa-search"></i> Use search to find specific brands</li>
+                            <li><i class="fas fa-hand-pointer"></i> Click on brand circles for details</li>
+                            <li><i class="fas fa-arrows-alt"></i> Drag to navigate, use +/- to zoom</li>
+                        </ul>
+                    </div>
+                `;
+                infoPanel.classList.add('active');
+            }, 1000);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', initBrandClusters);
+    </script>
+    
+    <!-- Service Worker for PWA -->
+    <script>
+        // Inline service worker registration
+        if ('serviceWorker' in navigator) {
+            const swContent = `
+                self.addEventListener('install', (event) => {
+                    event.waitUntil(
+                        caches.open('tge-universe-v1').then((cache) => {
+                            return cache.addAll([
+                                './',
+                                './index.html',
+                                './manifest.json'
+                            ]);
+                        })
+                    );
+                });
+
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request).then((response) => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swContent], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl).then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(error => {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+    </script>
+    
+    <!-- Manifest for PWA -->
+    <script type="application/json" id="manifest-data">
+        {
+            "name": "TGE Universe",
+            "short_name": "TGE",
+            "description": "Explore The Great Empire brand universe",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#0a1128",
+            "theme_color": "#0a1128",
+            "orientation": "landscape",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234361ee'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>T</text></svg>",
+                    "sizes": "96x96",
+                    "type": "image/svg+xml"
+                },
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234361ee'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>T</text></svg>",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml"
+                },
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234361ee'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>T</text></svg>",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml"
+                }
+            ]
         }
     </script>
 </body>
