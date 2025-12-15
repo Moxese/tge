@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Empire - Brand Galaxy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0f2e 0%, #1a1b3e 50%, #0c0f2e 100%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(10, 12, 40, 0.8);
+            border-bottom: 2px solid #3a3f8c;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #ffd166, #ff5e5b, #8a4fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(138, 79, 255, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #b0b0ff;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .galaxy-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            min-height: 80vh;
+        }
+        
+        .galaxy-center {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 3rem auto;
+        }
+        
+        .galaxy-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #ff5e5b 0%, #8a4fff 70%, transparent 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px #ff5e5b, 0 0 100px #8a4fff;
+            animation: pulse 4s infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            z-index: 5;
+        }
+        
+        .sun {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 5px;
+            z-index: 4;
+        }
+        
+        .sun:hover {
+            transform: scale(1.2);
+            z-index: 6;
+        }
+        
+        .sun-1 { top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 80px; background: radial-gradient(circle, #ffd166 0%, #ff9e00 70%); box-shadow: 0 0 30px #ffd166; }
+        .sun-2 { top: 20%; right: 10%; width: 70px; height: 70px; background: radial-gradient(circle, #5bff8a 0%, #00b347 70%); box-shadow: 0 0 25px #5bff8a; }
+        .sun-3 { bottom: 20%; right: 10%; width: 75px; height: 75px; background: radial-gradient(circle, #5bb3ff 0%, #0066cc 70%); box-shadow: 0 0 25px #5bb3ff; }
+        .sun-4 { bottom: 0; left: 50%; transform: translateX(-50%); width: 65px; height: 65px; background: radial-gradient(circle, #ff8a5b 0%, #cc4400 70%); box-shadow: 0 0 25px #ff8a5b; }
+        .sun-5 { bottom: 20%; left: 10%; width: 70px; height: 70px; background: radial-gradient(circle, #d166ff 0%, #8800cc 70%); box-shadow: 0 0 25px #d166ff; }
+        .sun-6 { top: 20%; left: 10%; width: 60px; height: 60px; background: radial-gradient(circle, #ff66b3 0%, #cc0066 70%); box-shadow: 0 0 20px #ff66b3; }
+        
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .orbit-1 { width: 400px; height: 400px; }
+        .orbit-2 { width: 500px; height: 500px; }
+        
+        .solar-system-view {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: none;
+        }
+        
+        .solar-system-view.active {
+            display: block;
+        }
+        
+        .back-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #3a3f8c;
+            color: #b0b0ff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+        
+        .sun-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #3a3f8c;
+        }
+        
+        .sun-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .planets-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .planet {
+            background: rgba(30, 33, 70, 0.8);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .planet:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(138, 79, 255, 0.5);
+        }
+        
+        .planet-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .planet-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .planet-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .moons-container {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .moon {
+            background: rgba(40, 43, 90, 0.8);
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .moon-icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .add-planet, .add-moon {
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .add-planet:hover, .add-moon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #b0b0ff;
+            font-size: 0.9rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 60px #ff5e5b, 0 0 100px #8a4fff; }
+            100% { box-shadow: 0 0 80px #ff5e5b, 0 0 120px #8a4fff; }
+        }
+        
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #3a3f8c;
+            color: #b0b0ff;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .galaxy-center {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .orbit-1 { width: 320px; height: 320px; }
+            .orbit-2 { width: 420px; height: 420px; }
+            
+            .planets-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="header">
+        <h1>The Great Empire</h1>
+        <p>A dynamic universe of interconnected brands, constantly expanding and evolving. Click on any sun to explore its solar system.</p>
+    </div>
+    
+    <div class="galaxy-container">
+        <div class="galaxy-center">
+            <div class="galaxy-core">TGE</div>
+            
+            <div class="orbit orbit-1"></div>
+            <div class="orbit orbit-2"></div>
+            
+            <div class="sun sun-1" data-sun="teleioo">Teleioō Savour</div>
+            <div class="sun sun-2" data-sun="adamah">Adamah</div>
+            <div class="sun sun-3" data-sun="eon">EON Global</div>
+            <div class="sun sun-4" data-sun="prime">Prime Reserve</div>
+            <div class="sun sun-5" data-sun="enative">ENative</div>
+            <div class="sun sun-6" data-sun="aphorizo">Aphorizo</div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="resetView"><i class="fas fa-globe"></i> Galaxy View</button>
+            <button class="control-btn" id="addSun"><i class="fas fa-plus"></i> Add New Sun</button>
+            <button class="control-btn" id="infoBtn"><i class="fas fa-info-circle"></i> How to Expand</button>
+        </div>
+        
+        <div class="instructions">
+            <p><i class="fas fa-lightbulb"></i> This universe is designed to expand infinitely. You can add new suns, planets, and moons as the empire grows.</p>
+        </div>
+    </div>
+    
+    <!-- Solar System Views -->
+    <div class="solar-system-view" id="teleioo-view">
+        <button class="back-button"><i class="fas fa-arrow-left"></i> Back to Galaxy</button>
+        
+        <div class="sun-header">
+            <div class="sun-icon" style="background: radial-gradient(circle, #ffd166 0%, #ff9e00 70%); box-shadow: 0 0 20px #ffd166;">
+                <i class="fas fa-sun"></i>
+            </div>
+            <div>
+                <h2>Teleioō Savour Solar System</h2>
+                <p>The epicenter of culinary, travel, and media brands</p>
+            </div>
+        </div>
+        
+        <div class="planets-container" id="teleioo-planets">
+            <!-- Planets will be populated by JavaScript -->
+        </div>
+        
+        <div class="add-planet" id="add-teleioo-planet">
+            <i class="fas fa-plus"></i> Add New Planet (Brand) to Teleioō Savour
+        </div>
+    </div>
+    
+    <!-- Other solar system views would follow the same pattern -->
+    
+    <script>
+        // Create stars background
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.width = `${Math.random() * 3}px`;
+            star.style.height = star.style.width;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.opacity = Math.random() * 0.8 + 0.2;
+            starsContainer.appendChild(star);
+        }
+        
+        // Galaxy data structure
+        const galaxyData = {
+            "teleioo": {
+                name: "Teleioō Savour",
+                color: "#ffd166",
+                planets: [
+                    {
+                        name: "Fusion Foods",
+                        color: "#ff9e00",
+                        moons: [
+                            { name: "Mugs and Dines", description: "A culinary brand" },
+                            { name: "Fusion Stores", description: "Raw food store" },
+                            { name: "Sip-Up", description: "Beverages and Drinks brand" }
+                        ]
+                    },
+                    {
+                        name: "Teleioō Safaris",
+                        color: "#5bff8a",
+                        moons: [
+                            { name: "Slair Safaris", description: "Travel Agency brand" },
+                            { name: "Book-Up Trips", description: "Trips and Vacations brand" }
+                        ]
+                    },
+                    {
+                        name: "Hub Savoir",
+                        color: "#5bb3ff",
+                        moons: [
+                            { name: "Hekima Hub", description: "Courses brand that sells courses" },
+                            { name: "Hekima Tutors", description: "A private tutoring Platform" }
+                        ]
+                    },
+                    {
+                        name: "Big Media Alliance (BMA)",
+                        color: "#ff8a5b",
+                        moons: [
+                            { name: "School of Media and Arts", description: "Educational institution for media" },
+                            { name: "Global News Channel", description: "Worldwide news broadcasting" }
+                        ]
+                    }
+                ]
+            },
+            "adamah": {
+                name: "Adamah",
+                color: "#5bff8a",
+                planets: [
+                    {
+                        name: "Planet 1",
+                        color: "#00b347",
+                        moons: [
+                            { name: "Moon A", description: "Description for Moon A" },
+                            { name: "Moon B", description: "Description for Moon B" }
+                        ]
+                    }
+                ]
+            },
+            "eon": {
+                name: "EON Global",
+                color: "#5bb3ff",
+                planets: [
+                    {
+                        name: "Planet 1",
+                        color: "#0066cc",
+                        moons: [
+                            { name: "Moon A", description: "Description for Moon A" }
+                        ]
+                    }
+                ]
+            },
+            "prime": {
+                name: "Prime Reserve",
+                color: "#ff8a5b",
+                planets: [
+                    {
+                        name: "Planet 1",
+                        color: "#cc4400",
+                        moons: [
+                            { name: "Moon A", description: "Description for Moon A" },
+                            { name: "Moon B", description: "Description for Moon B" }
+                        ]
+                    }
+                ]
+            },
+            "enative": {
+                name: "ENative",
+                color: "#d166ff",
+                planets: [
+                    {
+                        name: "Planet 1",
+                        color: "#8800cc",
+                        moons: [
+                            { name: "Moon A", description: "Description for Moon A" }
+                        ]
+                    }
+                ]
+            },
+            "aphorizo": {
+                name: "Aphorizo",
+                color: "#ff66b3",
+                planets: [
+                    {
+                        name: "Planet 1",
+                        color: "#cc0066",
+                        moons: [
+                            { name: "Moon A", description: "Description for Moon A" },
+                            { name: "Moon B", description: "Description for Moon B" }
+                        ]
+                    }
+                ]
+            }
+        };
+        
+        // DOM elements
+        const galaxyView = document.querySelector('.galaxy-container');
+        const solarSystemViews = document.querySelectorAll('.solar-system-view');
+        const sunElements = document.querySelectorAll('.sun');
+        const backButtons = document.querySelectorAll('.back-button');
+        const resetViewBtn = document.getElementById('resetView');
+        const addSunBtn = document.getElementById('addSun');
+        const infoBtn = document.getElementById('infoBtn');
+        
+        // Initialize the first solar system view
+        initSolarSystemView('teleioo');
+        
+        // Event listeners for sun clicks
+        sunElements.forEach(sun => {
+            sun.addEventListener('click', function() {
+                const sunId = this.getAttribute('data-sun');
+                showSolarSystem(sunId);
+            });
+        });
+        
+        // Event listeners for back buttons
+        backButtons.forEach(button => {
+            button.addEventListener('click', showGalaxy);
+        });
+        
+        // Event listener for reset view button
+        resetViewBtn.addEventListener('click', showGalaxy);
+        
+        // Event listener for add sun button
+        addSunBtn.addEventListener('click', addNewSun);
+        
+        // Event listener for info button
+        infoBtn.addEventListener('click', showInstructions);
+        
+        // Function to show a solar system
+        function showSolarSystem(sunId) {
+            galaxyView.style.display = 'none';
+            solarSystemViews.forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            const targetView = document.getElementById(`${sunId}-view`);
+            if (targetView) {
+                targetView.classList.add('active');
+                initSolarSystemView(sunId);
+            }
+        }
+        
+        // Function to show the galaxy view
+        function showGalaxy() {
+            galaxyView.style.display = 'flex';
+            solarSystemViews.forEach(view => {
+                view.classList.remove('active');
+            });
+        }
+        
+        // Function to initialize a solar system view
+        function initSolarSystemView(sunId) {
+            const sunData = galaxyData[sunId];
+            if (!sunData) return;
+            
+            const planetsContainer = document.getElementById(`${sunId}-planets`);
+            if (!planetsContainer) return;
+            
+            // Clear the container
+            planetsContainer.innerHTML = '';
+            
+            // Add planets
+            sunData.planets.forEach((planet, index) => {
+                const planetElement = createPlanetElement(planet, sunId, index);
+                planetsContainer.appendChild(planetElement);
+            });
+            
+            // Add event listener for adding new planet
+            const addPlanetBtn = document.getElementById(`add-${sunId}-planet`);
+            if (addPlanetBtn) {
+                addPlanetBtn.onclick = function() {
+                    addNewPlanet(sunId);
+                };
+            }
+        }
+        
+        // Function to create a planet element
+        function createPlanetElement(planet, sunId, planetIndex) {
+            const planetElement = document.createElement('div');
+            planetElement.className = 'planet';
+            planetElement.innerHTML = `
+                <div class="planet-header">
+                    <div class="planet-icon" style="background: ${planet.color};">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="planet-name">${planet.name}</div>
+                </div>
+                <div class="moons-container" id="${sunId}-planet-${planetIndex}-moons">
+                    ${planet.moons.map(moon => `
+                        <div class="moon">
+                            <div class="moon-icon"><i class="fas fa-moon"></i></div>
+                            <div>
+                                <div><strong>${moon.name}</strong></div>
+                                <div style="font-size: 0.8rem; color: #b0b0ff;">${moon.description}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="add-moon" data-sun="${sunId}" data-planet="${planetIndex}">
+                    <i class="fas fa-plus"></i> Add New Moon (Sub-brand)
+                </div>
+            `;
+            
+            // Add event listener for adding new moon
+            const addMoonBtn = planetElement.querySelector('.add-moon');
+            addMoonBtn.addEventListener('click', function() {
+                const sunId = this.getAttribute('data-sun');
+                const planetIndex = this.getAttribute('data-planet');
+                addNewMoon(sunId, planetIndex);
+            });
+            
+            return planetElement;
+        }
+        
+        // Function to add a new sun
+        function addNewSun() {
+            const sunNames = ["Nova Lux", "Stellaris", "Helios Prime", "Solaris Maxima", "Lumina"];
+            const sunColors = ["#ff9966", "#66ffcc", "#9966ff", "#ff66aa", "#66aaff"];
+            const randomIndex = Math.floor(Math.random() * sunNames.length);
+            
+            const newSunId = sunNames[randomIndex].toLowerCase().replace(/\s+/g, '-');
+            const newSunName = sunNames[randomIndex];
+            const newSunColor = sunColors[randomIndex];
+            
+            // Add to data structure
+            galaxyData[newSunId] = {
+                name: newSunName,
+                color: newSunColor,
+                planets: []
+            };
+            
+            // Create a new sun element in the galaxy
+            const galaxyCenter = document.querySelector('.galaxy-center');
+            const newSun = document.createElement('div');
+            newSun.className = 'sun';
+            newSun.setAttribute('data-sun', newSunId);
+            newSun.textContent = newSunName;
+            
+            // Position randomly in an orbit
+            const orbitNum = Math.random() > 0.5 ? 1 : 2;
+            const angle = Math.random() * 2 * Math.PI;
+            const orbitRadius = orbitNum === 1 ? 200 : 250;
+            const centerX = 150; // Half of galaxy-center width
+            const centerY = 150; // Half of galaxy-center height
+            
+            const posX = centerX + orbitRadius * Math.cos(angle);
+            const posY = centerY + orbitRadius * Math.sin(angle);
+            
+            newSun.style.left = `${posX}px`;
+            newSun.style.top = `${posY}px`;
+            newSun.style.background = `radial-gradient(circle, ${newSunColor} 0%, ${darkenColor(newSunColor, 30)} 70%)`;
+            newSun.style.boxShadow = `0 0 25px ${newSunColor}`;
+            
+            galaxyCenter.appendChild(newSun);
+            
+            // Add event listener
+            newSun.addEventListener('click', function() {
+                const sunId = this.getAttribute('data-sun');
+                // Create solar system view if it doesn't exist
+                createSolarSystemView(newSunId, newSunName, newSunColor);
+                showSolarSystem(sunId);
+            });
+            
+            // Create solar system view for the new sun
+            createSolarSystemView(newSunId, newSunName, newSunColor);
+            
+            alert(`New sun "${newSunName}" added to The Great Empire! Click on it to explore.`);
+        }
+        
+        // Function to create a solar system view for a new sun
+        function createSolarSystemView(sunId, sunName, sunColor) {
+            // Check if view already exists
+            if (document.getElementById(`${sunId}-view`)) return;
+            
+            // Create the new view
+            const newView = document.createElement('div');
+            newView.className = 'solar-system-view';
+            newView.id = `${sunId}-view`;
+            newView.innerHTML = `
+                <button class="back-button"><i class="fas fa-arrow-left"></i> Back to Galaxy</button>
+                
+                <div class="sun-header">
+                    <div class="sun-icon" style="background: radial-gradient(circle, ${sunColor} 0%, ${darkenColor(sunColor, 30)} 70%); box-shadow: 0 0 20px ${sunColor};">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <h2>${sunName} Solar System</h2>
+                        <p>A new frontier in The Great Empire galaxy</p>
+                    </div>
+                </div>
+                
+                <div class="planets-container" id="${sunId}-planets">
+                    <!-- Planets will be added here -->
+                </div>
+                
+                <div class="add-planet" id="add-${sunId}-planet">
+                    <i class="fas fa-plus"></i> Add New Planet (Brand) to ${sunName}
+                </div>
+            `;
+            
+            // Add to the body
+            document.body.appendChild(newView);
+            
+            // Add event listeners
+            const backButton = newView.querySelector('.back-button');
+            backButton.addEventListener('click', showGalaxy);
+            
+            const addPlanetBtn = newView.querySelector(`#add-${sunId}-planet`);
+            addPlanetBtn.addEventListener('click', function() {
+                addNewPlanet(sunId);
+            });
+            
+            // Initialize with empty solar system
+            initSolarSystemView(sunId);
+        }
+        
+        // Function to add a new planet
+        function addNewPlanet(sunId) {
+            const planetNames = ["Nexus Core", "Vertex Solutions", "Apex Ventures", "Quantum Innovations", "Pinnacle Group"];
+            const planetColors = ["#ff9966", "#66ffcc", "#9966ff", "#ff66aa", "#66aaff"];
+            const randomIndex = Math.floor(Math.random() * planetNames.length);
+            
+            const newPlanet = {
+                name: planetNames[randomIndex],
+                color: planetColors[randomIndex],
+                moons: []
+            };
+            
+            // Add to data structure
+            galaxyData[sunId].planets.push(newPlanet);
+            
+            // Refresh the solar system view
+            initSolarSystemView(sunId);
+            
+            alert(`New planet "${newPlanet.name}" added to ${galaxyData[sunId].name}!`);
+        }
+        
+        // Function to add a new moon
+        function addNewMoon(sunId, planetIndex) {
+            const moonNames = ["Lunar Base", "Orbital Station", "Satellite Hub", "Cosmic Outpost", "Stellar Node"];
+            const moonTypes = ["Technology", "Services", "Products", "Media", "Consulting"];
+            const randomNameIndex = Math.floor(Math.random() * moonNames.length);
+            const randomTypeIndex = Math.floor(Math.random() * moonTypes.length);
+            
+            const newMoon = {
+                name: `${moonNames[randomNameIndex]} ${moonTypes[randomTypeIndex]}`,
+                description: `A ${moonTypes[randomTypeIndex].toLowerCase()} sub-brand`
+            };
+            
+            // Add to data structure
+            galaxyData[sunId].planets[planetIndex].moons.push(newMoon);
+            
+            // Refresh the solar system view
+            initSolarSystemView(sunId);
+            
+            alert(`New moon "${newMoon.name}" added to ${galaxyData[sunId].planets[planetIndex].name}!`);
+        }
+        
+        // Function to show instructions
+        function showInstructions() {
+            alert("HOW TO EXPAND THE TGE UNIVERSE:\n\n1. Click 'Add New Sun' to create a new solar system\n2. Click on any sun to explore its planets\n3. Inside a solar system, click 'Add New Planet' to create brands\n4. On any planet, click 'Add New Moon' to create sub-brands\n\nThis structure can expand infinitely as The Great Empire grows!");
+        }
+        
+        // Helper function to darken a color
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) - amt;
+            const G = (num >> 8 & 0x00FF) - amt;
+            const B = (num & 0x0000FF) - amt;
+            
+            return "#" + (
+                0x1000000 +
+                (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)
+            ).toString(16).slice(1);
+        }
+    </script>
+</body>
+</html>
