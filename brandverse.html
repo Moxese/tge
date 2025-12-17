@@ -395,11 +395,18 @@
             color: #f472b6;
         }
 
-        .sun-container.dearsonofGod { top: 35%; left: 5%; }
-        .sun.dearsonofGod { 
-            background: radial-gradient(circle, #f472b6 0%, #db2777 100%);
+        .sun-container.dearsonofgod { top: 35%; left: 5%; }
+        .sun.dearsonofgod { 
+            background: radial-gradient(circle, #8b5cf6 0%, #7c3aed 100%);
             animation: orbit 24s linear infinite reverse;
-            color: #f472b6;
+            color: #8b5cf6;
+        }
+
+        .sun-container.watifu { top: 25%; left: 25%; }
+        .sun.watifu { 
+            background: radial-gradient(circle, #06b6d4 0%, #0891b2 100%);
+            animation: orbit 26s linear infinite;
+            color: #06b6d4;
         }
 
         /* Planet orbits */
@@ -563,10 +570,12 @@
             padding: 12px;
             border-left: 4px solid;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .mobile-planet-item:hover {
             background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
         }
 
         .mobile-planet-name {
@@ -588,10 +597,34 @@
             border-radius: 4px;
             font-size: 0.8rem;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .mobile-sub-item:hover {
             background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        /* Sub-brand panel */
+        .subbrand-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            color: var(--navy);
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .subbrand-panel.active {
+            transform: translateY(0);
         }
 
         /* Info panel */
@@ -677,6 +710,7 @@
             align-items: center;
             gap: 12px;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .brand-list li:last-child {
@@ -702,6 +736,38 @@
             font-size: 0.85rem;
             flex-shrink: 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Sub-brand details */
+        .subbrand-details {
+            display: grid;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .subbrand-item {
+            padding: 12px;
+            background: rgba(10, 17, 40, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .subbrand-item:hover {
+            background: rgba(10, 17, 40, 0.08);
+            transform: translateX(5px);
+        }
+
+        .subbrand-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--navy);
+        }
+
+        .subbrand-desc {
+            font-size: 0.9rem;
+            color: #666;
         }
 
         /* Loading overlay */
@@ -949,7 +1015,8 @@
 
         /* Dark mode support */
         @media (prefers-color-scheme: dark) {
-            .info-panel {
+            .info-panel,
+            .subbrand-panel {
                 background: var(--navy);
                 color: var(--white);
             }
@@ -973,6 +1040,22 @@
             
             .brand-list li:hover {
                 background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .subbrand-item {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .subbrand-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+            
+            .subbrand-name {
+                color: var(--white);
+            }
+            
+            .subbrand-desc {
+                color: rgba(255, 255, 255, 0.7);
             }
         }
 
@@ -1095,12 +1178,20 @@
             <div class="planet-orbit" style="width: 145px; height: 145px; top: -42px; left: -42px;"></div>
         </div>
 
-        <div class="sun-container dearsonofGod" data-sun="dearsonofGod" role="button" tabindex="0" aria-label="Aphorizo brand cluster">
-            <div class="sun-label">DSOG</div>
-            <div class="sun dearsonofGod">
-                <i class="fas fa-fashion"></i>
+        <div class="sun-container dearsonofgod" data-sun="dearsonofgod" role="button" tabindex="0" aria-label="Dear Son Of God brand cluster">
+            <div class="sun-label">Dear Son Of God</div>
+            <div class="sun dearsonofgod">
+                <i class="fas fa-crown"></i>
             </div>
             <div class="planet-orbit" style="width: 145px; height: 145px; top: -42px; left: -42px;"></div>
+        </div>
+
+        <div class="sun-container watifu" data-sun="watifu" role="button" tabindex="0" aria-label="Watifu Brands cluster">
+            <div class="sun-label">Watifu Brands</div>
+            <div class="sun watifu">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <div class="planet-orbit" style="width: 160px; height: 160px; top: -50px; left: -50px;"></div>
         </div>
         
         <!-- Planets will be added here by JavaScript -->
@@ -1119,6 +1210,19 @@
         </div>
         <div id="mobilePlanetsView">
             <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Sub-brand Panel -->
+    <div class="subbrand-panel" id="subbrandPanel">
+        <div class="info-header">
+            <h2 class="info-title" id="subbrandTitle">Sub-brands Details</h2>
+            <button class="close-info" id="closeSubbrandBtn" aria-label="Close sub-brand panel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="info-content" id="subbrandContent">
+            <!-- Content will be populated by JavaScript -->
         </div>
     </div>
     
@@ -1289,32 +1393,31 @@
                     }
                 ]
             },
-            dearsonofGod: {
+            dearsonofgod: {
                 name: "Dear Son Of God",
-                icon: "fa-code",
-                color: "#c084fc",
-                description: "Home and Fashion House",
+                icon: "fa-crown",
+                color: "#8b5cf6",
+                description: "Home and Fashion House for premium lifestyle",
                 brands: [
                     { 
                         name: "House of Glamour Creations", 
                         short: "HOG",
-                        color: "#c084fc",
-                        description: "Digital product development",
+                        color: "#8b5cf6",
+                        description: "Premium fashion and home decor production",
                         subBrands: [
-                            { name: "Visha Apparel", desc: "Clothing production" },
-                            { name: "Home Decor", desc: "Home decoration and Kitchen Accessories production" },
+                            { name: "Visha Apparel", desc: "High-end clothing production and fashion design" },
+                            { name: "Home Decor", desc: "Luxury home decoration and Kitchen Accessories production" },
                         ]
                     }, 
-                     { 
+                    { 
                         name: "Fitare Sports House", 
                         short: "Fitare",
-                        color: "#c084fc",
-                        description: "Sport goods and accessories",
+                        color: "#06b6d4",
+                        description: "Premium sport goods and accessories",
                         subBrands: [
-                            { name: "Fitare Apparel", desc: "Sports Clothing production" },
-                            { name: "Fitare Equipment", desc: "Sports Equipment Production" },
-                            { name: "WorkFit Club", desc: "Sports and Fitness Club" },
-
+                            { name: "Fitare Apparel", desc: "High-performance sports clothing production" },
+                            { name: "Fitare Equipment", desc: "Professional sports equipment production" },
+                            { name: "WorkFit Club", desc: "Exclusive sports and fitness clubs" },
                         ]
                     }
                 ]
@@ -1336,6 +1439,27 @@
                         ]
                     }
                 ]
+            },
+            watifu: {
+                name: "Watifu Brands",
+                icon: "fa-bolt",
+                color: "#06b6d4",
+                description: "Technology and innovation solutions",
+                brands: [
+                    { 
+                        name: "Jasiri Networks", 
+                        short: "JN",
+                        color: "#06b6d4",
+                        description: "Comprehensive technology ecosystem",
+                        subBrands: [
+                            { name: "E-Huv System", desc: "Electric vehicle and transportation solutions" },
+                            { name: "V-Pay Payments", desc: "Secure digital payment platform" },
+                            { name: "Kazinni Space", desc: "Co-working and innovation spaces" },
+                            { name: "E Franchise", desc: "Digital franchise management system" },
+                            { name: "SokoInn Marketplace", desc: "E-commerce and online marketplace platform" }
+                        ]
+                    }
+                ]
             }
         };
 
@@ -1347,6 +1471,10 @@
             infoTitle: document.getElementById('infoTitle'),
             infoContent: document.getElementById('infoContent'),
             closeInfoBtn: document.getElementById('closeInfoBtn'),
+            subbrandPanel: document.getElementById('subbrandPanel'),
+            subbrandTitle: document.getElementById('subbrandTitle'),
+            subbrandContent: document.getElementById('subbrandContent'),
+            closeSubbrandBtn: document.getElementById('closeSubbrandBtn'),
             mobileMenuBtn: document.getElementById('mobileMenuBtn'),
             mobileOverlay: document.getElementById('mobileOverlay'),
             closeMenuBtn: document.getElementById('closeMenuBtn'),
@@ -1491,11 +1619,15 @@
                     </div>
                     <div class="mobile-planets">
                         ${sunData.brands.slice(0, 2).map(brand => `
-                            <div class="mobile-planet-item" style="border-left-color: ${brand.color}">
+                            <div class="mobile-planet-item" style="border-left-color: ${brand.color}"
+                                 onclick="showBrandInfo(${JSON.stringify(sunData).replace(/"/g, '&quot;')}, ${JSON.stringify(brand).replace(/"/g, '&quot;')})">
                                 <div class="mobile-planet-name">${brand.name}</div>
                                 <div class="mobile-sub-brands">
-                                    ${brand.subBrands.slice(0, 2).map(sub => `
-                                        <div class="mobile-sub-item">${sub.name}</div>
+                                    ${brand.subBrands.slice(0, 3).map(sub => `
+                                        <div class="mobile-sub-item" 
+                                             onclick="event.stopPropagation(); showSubBrandDetails(${JSON.stringify(sub).replace(/"/g, '&quot;')}, ${JSON.stringify(brand).replace(/"/g, '&quot;')})">
+                                            ${sub.name}
+                                        </div>
                                     `).join('')}
                                 </div>
                             </div>
@@ -1539,6 +1671,14 @@
                             <div style="font-size:0.9rem;color:rgba(255,255,255,0.7);margin-top:8px;">
                                 ${brand.description}
                             </div>
+                            <div class="mobile-sub-brands" style="margin-top:10px;">
+                                ${brand.subBrands.map(sub => `
+                                    <div class="mobile-sub-item" 
+                                         onclick="event.stopPropagation(); showSubBrandDetails(${JSON.stringify(sub).replace(/"/g, '&quot;')}, ${JSON.stringify(brand).replace(/"/g, '&quot;')})">
+                                        ${sub.name}
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -1553,6 +1693,42 @@
             elements.mobilePlanetsView.style.display = 'none';
             elements.mobileSunsList.style.display = 'grid';
             elements.mobilePlanetsView.innerHTML = '';
+        }
+
+        // Show sub-brand details
+        function showSubBrandDetails(subBrand, parentBrand) {
+            elements.subbrandTitle.textContent = subBrand.name;
+            
+            elements.subbrandContent.innerHTML = `
+                <div class="info-section">
+                    <h3><i class="fas fa-info-circle" style="color:${parentBrand.color}"></i> Sub-brand Details</h3>
+                    <ul class="brand-list">
+                        <li onclick="showBrandInfo(${JSON.stringify(parentBrand).replace(/"/g, '&quot;')})">
+                            <div class="brand-icon" style="background:${parentBrand.color}">
+                                ${parentBrand.short}
+                            </div>
+                            <div>
+                                <strong>${parentBrand.name}</strong>
+                                <div style="font-size:0.95rem;color:#666;margin-top:4px;">${parentBrand.description}</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fas fa-star" style="color:${parentBrand.color}"></i> ${subBrand.name} Overview</h3>
+                    <div class="subbrand-item" style="border-left-color:${parentBrand.color}">
+                        <div class="subbrand-name">${subBrand.name}</div>
+                        <div class="subbrand-desc">${subBrand.desc}</div>
+                    </div>
+                </div>
+            `;
+            
+            elements.subbrandPanel.classList.add('active');
+            
+            // Close mobile menu if open
+            if (state.isMobile) {
+                elements.mobileOverlay.classList.remove('active');
+            }
         }
 
         // Show brand information
@@ -1583,19 +1759,15 @@
                 </div>
                 <div class="info-section">
                     <h3><i class="fas fa-layer-group" style="color:${brand.color}"></i> Associated Brands</h3>
-                    <ul class="brand-list">
+                    <div class="subbrand-details">
                         ${brand.subBrands.map(subBrand => `
-                            <li>
-                                <div class="brand-icon" style="background:${brand.color};opacity:0.8;">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <div>
-                                    <strong>${subBrand.name}</strong>
-                                    <div style="font-size:0.95rem;color:#666;margin-top:4px;">${subBrand.desc}</div>
-                                </div>
-                            </li>
+                            <div class="subbrand-item" style="border-left-color:${brand.color}"
+                                 onclick="showSubBrandDetails(${JSON.stringify(subBrand).replace(/"/g, '&quot;')}, ${JSON.stringify(brand).replace(/"/g, '&quot;')})">
+                                <div class="subbrand-name">${subBrand.name}</div>
+                                <div class="subbrand-desc">${subBrand.desc}</div>
+                            </div>
                         `).join('')}
-                    </ul>
+                    </div>
                 </div>
             `;
             
@@ -1630,6 +1802,12 @@
             elements.closeInfoBtn.addEventListener('click', () => {
                 elements.infoPanel.classList.remove('active');
                 elements.infoPanel.setAttribute('aria-hidden', 'true');
+            });
+
+            // Close sub-brand panel
+            elements.closeSubbrandBtn.addEventListener('click', () => {
+                elements.subbrandPanel.classList.remove('active');
+                elements.subbrandPanel.setAttribute('aria-hidden', 'true');
             });
 
             // Mobile menu
@@ -1706,6 +1884,9 @@
                 if (e.key === 'Escape') {
                     if (elements.infoPanel.classList.contains('active')) {
                         elements.infoPanel.classList.remove('active');
+                    }
+                    if (elements.subbrandPanel.classList.contains('active')) {
+                        elements.subbrandPanel.classList.remove('active');
                     }
                     if (elements.mobileOverlay.classList.contains('active')) {
                         elements.mobileOverlay.classList.remove('active');
@@ -1901,7 +2082,7 @@
                         if (subBrand.name.toLowerCase().includes(term) || 
                             subBrand.desc.toLowerCase().includes(term)) {
                             highlightSun(sunId);
-                            showBrandInfo(sunData, brand);
+                            showSubBrandDetails(subBrand, brand);
                             return;
                         }
                     }
@@ -1964,12 +2145,21 @@
                                 <i class="fas fa-hand-pointer"></i>
                             </div>
                             <div>
-                                <strong>Tap brand circles</strong>
-                                <div style="font-size:0.95rem;color:#666">for detailed information</div>
+                                <strong>Click on planets</strong>
+                                <div style="font-size:0.95rem;color:#666">for brand information</div>
                             </div>
                         </li>
                         <li>
                             <div class="brand-icon" style="background:#4ade80">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div>
+                                <strong>Click on sub-brands</strong>
+                                <div style="font-size:0.95rem;color:#666">for detailed information</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="brand-icon" style="background:#c084fc">
                                 <i class="fas fa-arrows-alt"></i>
                             </div>
                             <div>
@@ -1987,6 +2177,7 @@
         window.showMobilePlanetsView = showMobilePlanetsView;
         window.showMobileSunsList = showMobileSunsList;
         window.showBrandInfo = showBrandInfo;
+        window.showSubBrandDetails = showSubBrandDetails;
 
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
